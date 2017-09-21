@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "TaylorNetwork\\UsernameGenerator": "src/"
+            "TaylorNetwork\\UsernameGenerator\\": "src/"
         }
     },
     "extra": {
