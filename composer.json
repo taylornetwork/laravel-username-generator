@@ -1,0 +1,29 @@
+{
+    "name": "taylornetwork/laravel-username-generator",
+    "require": {
+        "illuminate/support": "5.5.*",
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Taylor",
+            "email": "sam@taylornetwork.ca"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "TaylorNetwork\\UsernameGenerator": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TaylorNetwork\\UsernameGenerator\\ServiceProvider"
+            ]
+        }
+    }
+}
