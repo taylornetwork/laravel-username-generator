@@ -50,10 +50,10 @@ class Generator
 
     /**
      * UsernameGenerator constructor.
-     * 
+     *
      * @param string|null $name
      */
-    public function __construct ($name = null)
+    public function __construct($name = null)
     {
         $this->setName($name);
 
@@ -72,7 +72,7 @@ class Generator
      * @return string
      * @throws Exception
      */
-    public function makeUsername ($name = null)
+    public function makeUsername($name = null)
     {
         $this->setName($name);
         $this->checkParams();
@@ -95,7 +95,7 @@ class Generator
      * 
      * @param string|null $name
      */
-    public function setName ($name = null)
+    public function setName($name = null)
     {
         if ($name !== null)
         {
@@ -106,7 +106,7 @@ class Generator
     /**
      * Make the username unique
      */
-    protected function makeUnique ()
+    protected function makeUnique()
     {
         $similar = count($this->class->findSimilarUsernames($this->username));
 
@@ -119,7 +119,7 @@ class Generator
     /**
      * Separate the words in the name
      */
-    protected function separate ()
+    protected function separate()
     {
         $this->username = str_replace(' ', $this->separator, $this->username);
     }
@@ -127,7 +127,7 @@ class Generator
     /**
      * Convert the characters to upper/lower case
      */
-    protected function convertCase ()
+    protected function convertCase()
     {
         switch ($this->case)
         {
@@ -149,7 +149,7 @@ class Generator
      * 
      * @throws Exception
      */
-    protected function checkParams ()
+    protected function checkParams()
     {
         $errors = [];
 
@@ -203,7 +203,7 @@ class Generator
      * @param string $property
      * @return mixed
      */
-    public function __get ($property)
+    public function __get($property)
     {
         return $this->$property;
     }

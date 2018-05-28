@@ -68,6 +68,43 @@ Returns
 
 ```
 
+## GeneratesUsernames Trait
+
+This package also comes with a `GeneratesUsernames` trait that you can add to your model and it will automatically call the username generator when the model is saving without the specified username column.
+
+*Note: you will also need to include the `FindSimilarUsernames` trait either way*
+
+```php
+use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
+use TaylornNetwork\UsernameGenerator\FindSimilarUsernames;
+
+class User 
+{
+	use FindSimilarUsernames, GeneratesUsernames;
+}
+
+```
+
+You can also add custom config to call before the username is generated.
+
+Override the `generatorConfig` method in your model
+
+```php
+use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
+use TaylornNetwork\UsernameGenerator\FindSimilarUsernames;
+
+class User 
+{
+	use FindSimilarUsernames, GeneratesUsernames;
+	
+	public function generatorConfig(&$generator) 
+	{
+		$generator->setConfig([ 'separator' => '_' ]);
+	}
+}
+
+```
+
 ## License
 
 MIT

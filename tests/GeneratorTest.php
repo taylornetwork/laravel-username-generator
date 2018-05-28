@@ -3,11 +3,16 @@
 require(__DIR__.'/../src/ServiceProvider.php');
 require(__DIR__.'/../src/FindSimilarUsernames.php');
 require(__DIR__.'/../src/Generator.php');
-require(__DIR__.'/TestingModel.php');
+require(__DIR__.'/TestModel.php');
+require(__DIR__.'/TestUser.php');
+require(__DIR__.'/SomeUser.php');
+require(__DIR__.'/CustomConfigUser.php');
 
 use Orchestra\Testbench\TestCase;
 use TaylorNetwork\UsernameGenerator\Generator;
-use TaylorNetwork\Tests\TestingModel;
+use TaylorNetwork\Tests\TestUser;
+use TaylorNetwork\Tests\SomeUser;
+use TaylorNetwork\Tests\CustomConfigUser;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
 
 class GeneratorTest extends TestCase
@@ -20,7 +25,7 @@ class GeneratorTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('username_generator.class', TestingModel::class);
+        $app['config']->set('username_generator.class', TestUser::class);
     }
 
     public function testUnique()
@@ -62,4 +67,17 @@ class GeneratorTest extends TestCase
         $this->assertEquals('TestUser', $generator->makeUsername('Test User'));
     }
 
+    public function testModelTrait()
+    {
+        $model = new SomeUser();
+        $model->generateUsername();
+        $this->assertEquals('someuser1', $model->attributes['username']);
+    }
+
+    public function testModelCustomConfig()
+    {
+        $model = new CustomConfigUser();
+        $model->generateUsername();
+        $this->assertEquals('custom_config', $model->attributes['username']);
+    }
 }
