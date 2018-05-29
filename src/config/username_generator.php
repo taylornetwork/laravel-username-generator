@@ -24,7 +24,7 @@ return [
 
     'separator' => '',
 
-    'class' => '\\App\\User',
+    'model' => '\\App\\User',
 
     'column' => 'username',
 
