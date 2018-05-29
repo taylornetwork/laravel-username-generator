@@ -1,5 +1,7 @@
 # Laravel Username Generator
 
+Easily generate unique usernames for a Laravel User Model
+
 ## Install
 
 Via Composer
@@ -35,28 +37,31 @@ class User extends Authenticatable
 
 By default the `Generator` class has the following configuration:
 
-| Config | Value |
-|:------:|:-----:|
-| Unique Username | `true` |
-| Separator | `''` |
-| Case | `'lower'` |
-| Username DB Column | `'username'` | 
-| Class | `'\App\User'` |
+| Config | Value | Type |
+|:------:|:-----:|:----:|
+| Unique Username | `true` | boolean |
+| Separator | `''` | string (should be single character) |
+| Case | `'lower'` | string (one of lower, upper, or mixed) |
+| Username DB Column | `'username'` | string |
+| Class | `'\App\User'` | string |
 
 The config is stored in `config/username_generator.php`
 
-You can override any config by calling `$generator->setConfig($config, $newValue);` for the single instance
+You can override config on a new instance by `new Generator([ 'unique' => false ]);` etc.
 
 ## Basic Usage
 
-Create a new instance and call `makeUsername($name)`
+#### generate($name)
+Create a new instance and call `generate($name)`
+
+*Note: This has replaced, the old `makeUsername` method which is deprecated but still currently has support*
 
 ```php
 use TaylorNetwork\UsernameGenerator\Generator;
 
 $generator = new Generator();
 
-$username = $generator->makeUsername('Test User');
+$username = $generator->generate('Test User');
 
 ```
 
@@ -67,6 +72,36 @@ Returns
 'testuser'
 
 ```
+
+#### generateFor($model)
+Create a new instance and call `generateFor($model)`
+
+This will access the model's `name` property and convert it to a username.
+
+```php
+use TaylorNetwork\UsernameGenerator\Generator;
+
+class User
+{
+	public $name = 'Some Other User';
+	
+	public function getUsername()
+	{
+		$generator = new Generator();
+		return $generator->generateFor($this);
+	}
+}
+
+```
+
+Returns
+
+```php
+
+'someotheruser'
+
+```
+
 
 ## GeneratesUsernames Trait
 
@@ -103,6 +138,66 @@ class User
 	}
 }
 
+```
+
+## Other Examples
+
+### With a Separator
+
+```php
+$generator = new Generator([ 'separator' => '_' ]);
+$generator->generate('Some User');
+
+```
+
+Returns 
+
+```
+some_user
+```
+
+### Upper Case
+
+```php
+$generator = new Generator([ 'case' => 'upper' ]);
+$generator->generate('Some User');
+
+```
+
+Returns 
+
+```
+SOMEUSER
+```
+
+### Mixed Case
+
+```php
+$generator = new Generator([ 'case' => 'mixed' ]);
+$generator->generate('Some User');
+
+```
+
+Returns 
+
+```
+SomeUser
+```
+
+---
+
+Note: Mixed case will just ignore changing case altogether
+
+```php
+$generator = new Generator([ 'case' => 'mixed' ]);
+$generator->generate('SoMe WeIrD CapitaliZation');
+
+```
+
+Returns 
+
+```
+SoMeWeIrDCapitaliZation
 ```
 
 ## License

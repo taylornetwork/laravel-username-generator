@@ -11,28 +11,35 @@ class Generator
      * 
      * @var boolean
      */
-    protected $unique;
+    protected $unique = true;
 
     /**
      * Character case to use
      * 
      * @var string
      */
-    protected $case;
+    protected $case = 'lower';
 
     /**
      * Word separator to use
      * 
      * @var string
      */
-    protected $separator;
+    protected $separator = '';
 
     /**
-     * Instance of class
+     * Username database column
+     *
+     * @var string
+     */
+    protected $column = 'username';
+
+    /**
+     * Instance of model
      * 
      * @var object
      */
-    protected $class;
+    protected $model;
 
     /**
      * Name to convert to username
@@ -49,162 +56,143 @@ class Generator
     protected $username;
 
     /**
-     * UsernameGenerator constructor.
+     * Generator constructor.
      *
-     * @param string|null $name
+     * I don't like this setup but keeping it like this for backwards compatibility.
+     * This will eventually just be a config array as the only argument
+     *
+     * @param array|string $configOrName
      */
-    public function __construct($name = null)
+    public function __construct($configOrName = null)
     {
-        $this->setName($name);
+        $this->loadConfig();
 
-        $this->unique = config('username_generator.unique', true);
-        $this->case = strtolower(config('username_generator.case', 'lower'));
-        $this->separator = config('username_generator.separator', '-');
+        if($configOrName) {
+            switch(gettype($configOrName)) {
+                case 'array':
+                    // Array of config to set
+                    $this->setConfig($configOrName);
+                    break;
+                case 'string':
+                    // Name string to set
+                    $this->name = $configOrName;
+                    break;
+                default:
+                    break;
+            }
+        }
 
-        $class = config('username_generator.class');
-        $this->class = new $class;
     }
 
     /**
-     * Make the username!
-     * 
-     * @param string|null $name
-     * @return string
-     * @throws Exception
+     * Set config
+     *
+     * @param string|array $key
+     * @param mixed $value
+     * @return $this
      */
-    public function makeUsername($name = null)
+    public function setConfig($key, $value = null)
     {
-        $this->setName($name);
-        $this->checkParams();
-        
-        $this->username = $this->name;
-        
-        $this->separate();
-        $this->convertCase();
-        
-        if ($this->unique)
-        {
-            $this->makeUnique();
+        if(gettype($key) === 'array') {
+            foreach($key as $k => $v) {
+
+                if($k === 'model' && gettype($v) === 'string') {
+                    $v = new $v;
+                }
+
+                $this->$k = $v;
+            }
+        } else {
+            $this->$key = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Generate a username from a name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function generate($name = null)
+    {
+        if($name) {
+            $this->name = $name;
+        }
+
+        if(strtolower($this->case) !== 'mixed') {
+            $case = 'strto' . strtolower($this->case);
+            $this->name = $case($this->name);
+        }
+
+        $this->username = preg_replace('/[^a-zA-Z]/', $this->separator, $this->name);
+
+        if($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
+            if($similar = count($this->model->findSimilarUsernames($this->username)) > 0) {
+                $this->username .= $this->separator . $similar;
+            }
         }
 
         return $this->username;
     }
 
     /**
-     * Set the name property
-     * 
-     * @param string|null $name
-     */
-    public function setName($name = null)
-    {
-        if ($name !== null)
-        {
-            $this->name = $name;
-        }
-    }
-
-    /**
-     * Make the username unique
-     */
-    protected function makeUnique()
-    {
-        $similar = count($this->class->findSimilarUsernames($this->username));
-
-        if ($similar > 0)
-        {
-            $this->username = $this->username . $this->separator . $similar;
-        }
-    }
-
-    /**
-     * Separate the words in the name
-     */
-    protected function separate()
-    {
-        $this->username = str_replace(' ', $this->separator, $this->username);
-    }
-
-    /**
-     * Convert the characters to upper/lower case
-     */
-    protected function convertCase()
-    {
-        switch ($this->case)
-        {
-            case 'lower':
-                $this->username = strtolower($this->username);
-                break;
-
-            case 'upper':
-                $this->username = strtoupper($this->username);
-                break;
-
-            case 'mixed':
-                break;
-        }
-    }
-
-    /**
-     * Check to make sure properties are valid
-     * 
-     * @throws Exception
-     */
-    protected function checkParams()
-    {
-        $errors = [];
-
-        if (!isset($this->name))
-        {
-            $errors[] = '- Name is not set on class!';
-        }
-
-        if (gettype($this->unique) !== 'boolean')
-        {
-            $errors[] = '- Unique must be a boolean value!';
-        }
-
-        switch ($this->case)
-        {
-            case 'lower':
-            case 'upper':
-            case 'mixed':
-                break;
-            default:
-                $errors[] = '- ' . $this->case . ' is not a valid value for case.';
-                break;
-        }
-
-        if (!empty($errors))
-        {
-            throw new Exception("UsernameGenerator failed with the following error(s):\n" . implode("\n", $errors));
-        }
-    }
-
-    /**
-     * Set a config value
+     * Generate a username for a model
      *
-     * @param $config
-     * @param $value
+     * @param object $model
+     * @return string
      */
-    public function setConfig($config, $value = null)
+    public function generateFor($model)
     {
-        if(gettype($config) === 'array') {
-            foreach($config as $field => $value) {
-                $this->$field = $value;
+        if(gettype($model) === 'string') {
+            $model = new $model;
+        }
+
+        return $this->generate($model->name);
+    }
+
+    /**
+     * Call generate
+     *
+     * Included for backwards compatibility. Will eventually be removed.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function makeUsername($name = null)
+    {
+        return $this->generate($name);
+    }
+
+    /**
+     * Load config if the config function exists
+     */
+    protected function loadConfig()
+    {
+        if(function_exists('config')) {
+            try {
+                $this->unique = config('username_generator.unique');
+                $this->case = config('username_generator.case');
+                $this->separator = config('username_generator.separator');
+                $this->column = config('username_generator.column');
+                $model = config('username_generator.model');
+                $this->model = new $model;
+            } catch (Exception $e) {
+                // Ignore config loading errors...
             }
-        } else {
-            $this->$config = $value;
         }
     }
 
     /**
-     * Get a property
-     * 
-     * @param string $property
+     * __get
+     *
+     * @param string $name
      * @return mixed
      */
-    public function __get($property)
+    public function __get($name)
     {
-        return $this->$property;
+        return $this->$name;
     }
+
 }

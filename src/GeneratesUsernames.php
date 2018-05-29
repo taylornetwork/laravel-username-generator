@@ -25,7 +25,7 @@ trait GeneratesUsernames
         $generator = new Generator();
         $this->generatorConfig($generator);
         try {
-            $this->attributes[config('username_generator.column', 'username')] = $generator->makeUsername($this->getName());
+            $this->attributes[config('username_generator.column', 'username')] = $generator->generate($this->getName());
         } catch (\Exception $e) {
             // Failed but don't halt saving the model
         }

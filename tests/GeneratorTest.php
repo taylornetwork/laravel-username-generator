@@ -25,59 +25,68 @@ class GeneratorTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('username_generator.class', TestUser::class);
+        $app['config']->set('username_generator.model', TestUser::class);
     }
 
-    public function testUnique()
+    public function testOldMakeUsername()
     {
-        $generator = new Generator();
-        $username = $generator->makeUsername('Test User');
+        $g = new Generator();
+        $this->assertEquals('testuser1', $g->makeUsername('Test User'));
+    }
 
-        $this->assertEquals('testuser1', $username);
+    public function testDefaultConfig()
+    {
+        $g = new Generator();
+        $this->assertEquals('testuser1', $g->generate('Test User'));
     }
 
     public function testNotUnique()
     {
-        $generator = new Generator();
-        $generator->setConfig([
-            'unique' => false,
-        ]);
-
-        $this->assertEquals('testuser', $generator->makeUsername('Test User'));
+        $g = new Generator([ 'unique' => false ]);
+        $this->assertEquals('testuser', $g->generate('Test User'));
     }
 
-    public function testUniqueWithSeparator()
+    public function testMixedCaseNotUnique()
     {
-        $generator = new Generator();
-        $generator->setConfig([
-            'separator' => '_'
-        ]);
-
-        $this->assertEquals('test_user_1', $generator->makeUsername('Test User'));
+        $g = new Generator([ 'case' => 'mixed', 'unique' => false ]);
+        $this->assertEquals('TestUser', $g->generate('Test User'));
     }
 
-    public function testNotUniqueMixedCase()
+    public function testUppercaseUniqueSeparator()
     {
-        $generator = new Generator();
-        $generator->setConfig([
-            'unique' => false,
-            'case' => 'mixed'
-        ]);
-
-        $this->assertEquals('TestUser', $generator->makeUsername('Test User'));
+        $g = new Generator([ 'case' => 'upper', 'separator' => '_' ]);
+        $this->assertEquals('TEST_USER_1', $g->generate('Test User'));
     }
 
-    public function testModelTrait()
+    public function testGenerateForModel()
+    {
+        $g = new Generator();
+        $this->assertEquals('testuser1', $g->generateFor(new TestUser));
+    }
+
+    public function testTrait()
     {
         $model = new SomeUser();
         $model->generateUsername();
         $this->assertEquals('someuser1', $model->attributes['username']);
     }
 
-    public function testModelCustomConfig()
+    public function testTraitConfig()
     {
         $model = new CustomConfigUser();
         $model->generateUsername();
         $this->assertEquals('custom_config', $model->attributes['username']);
+    }
+
+    public function testTrimOtherChars()
+    {
+        $g = new Generator();
+        $this->assertEquals('testuser1', $g->generate('Test, |User...'));
+    }
+
+    public function testBackwardsConstructWithName()
+    {
+        $g = new Generator('Test User');
+        $this->assertEquals('testuser1', $g->generate());
     }
 }
