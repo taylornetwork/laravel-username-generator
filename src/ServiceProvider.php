@@ -16,7 +16,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->mergeConfigFrom(__DIR__.'/config/username_generator.php', 'username_generator');
 
         $this->publishes([
-            __DIR__.'/config/username_generator.php.php' => config_path('username_generator.php'),
+            __DIR__.'/config/username_generator.php' => config_path('username_generator.php'),
         ]);
     }
 
