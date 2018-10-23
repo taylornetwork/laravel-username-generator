@@ -1,7 +1,7 @@
 {
     "name": "taylornetwork/laravel-username-generator",
     "require": {
-        "illuminate/support": "5.*.*",
+        "illuminate/support": ">=5.5",
         "php": "^7.1"
     },
     "require-dev": {

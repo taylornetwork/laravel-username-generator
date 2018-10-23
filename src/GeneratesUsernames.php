@@ -11,7 +11,7 @@ trait GeneratesUsernames
     public static function bootGeneratesUsernames()
     {
         static::saving(function ($model) {
-            if(!$model->attributes[config('username_generator.column', 'username')]) {
+            if(!$model->getAttribute(config('username_generator.column', 'username'))) {
                 $model->generateUsername();
             }
         });
@@ -40,7 +40,7 @@ trait GeneratesUsernames
      */
     public function getName()
     {
-        return $this->attributes['name'];
+        return $this->getAttribute('name');
     }
 
     /**

@@ -9,7 +9,7 @@ class TestModel
 {
     use FindSimilarUsernames;
 
-    public $attributes = [];
+    protected $attributes = [];
 
     public static function where(...$args)
     {
@@ -19,5 +19,10 @@ class TestModel
     public function get()
     {
         return [$this->attributes];
+    }
+
+    public function getAttribute($attribute)
+    {
+        return $this->attributes[$attribute];
     }
 }
