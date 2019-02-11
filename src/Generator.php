@@ -129,7 +129,7 @@ class Generator
         $this->username = preg_replace('/[^a-zA-Z]/', $this->separator, $this->name);
 
         if($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
-            if($similar = count($this->model->findSimilarUsernames($this->username)) > 0) {
+            if(($similar = count($this->model->findSimilarUsernames($this->username))) > 0) {
                 $this->username .= $this->separator . $similar;
             }
         }
