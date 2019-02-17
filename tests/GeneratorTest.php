@@ -1,35 +1,34 @@
 <?php
 
-$loader = require(__DIR__.'/../vendor/autoload.php');
+$loader = require __DIR__.'/../vendor/autoload.php';
 $loader->addPsr4('TaylorNetwork\\Tests\\', __DIR__.'/');
 
-if(!function_exists('config')) {
-    function config($key, $default = null) 
+if (!function_exists('config')) {
+    function config($key, $default = null)
     {
-        $config = include_once(__DIR__.'/../src/config/username_generator.php');
+        $config = include_once __DIR__.'/../src/config/username_generator.php';
 
-        if(array_key_exists($key, $config)) {
+        if (array_key_exists($key, $config)) {
             return $config[$key];
         }
 
         return $default;
-    } 
+    }
 }
 
 use Orchestra\Testbench\TestCase;
-use TaylorNetwork\UsernameGenerator\Generator;
-use TaylorNetwork\Tests\TestUser;
-use TaylorNetwork\Tests\SomeUser;
 use TaylorNetwork\Tests\CustomConfigUser;
+use TaylorNetwork\Tests\SomeUser;
 use TaylorNetwork\Tests\TestMultipleUser;
+use TaylorNetwork\Tests\TestUser;
+use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
 
 class GeneratorTest extends TestCase
 {
-
     protected function getPackageProviders($app)
     {
-        return [ ServiceProvider::class ];
+        return [ServiceProvider::class];
     }
 
     protected function getEnvironmentSetUp($app)
@@ -51,26 +50,26 @@ class GeneratorTest extends TestCase
 
     public function testNotUnique()
     {
-        $g = new Generator([ 'unique' => false ]);
+        $g = new Generator(['unique' => false]);
         $this->assertEquals('testuser', $g->generate('Test User'));
     }
 
     public function testMixedCaseNotUnique()
     {
-        $g = new Generator([ 'case' => 'mixed', 'unique' => false ]);
+        $g = new Generator(['case' => 'mixed', 'unique' => false]);
         $this->assertEquals('TestUser', $g->generate('Test User'));
     }
 
     public function testUppercaseUniqueSeparator()
     {
-        $g = new Generator([ 'case' => 'upper', 'separator' => '_' ]);
+        $g = new Generator(['case' => 'upper', 'separator' => '_']);
         $this->assertEquals('TEST_USER_1', $g->generate('Test User'));
     }
 
     public function testGenerateForModel()
     {
         $g = new Generator();
-        $this->assertEquals('testuser1', $g->generateFor(new TestUser));
+        $this->assertEquals('testuser1', $g->generateFor(new TestUser()));
     }
 
     public function testTrait()
@@ -108,7 +107,7 @@ class GeneratorTest extends TestCase
 
     public function testTrimCharsWithSeparator()
     {
-        $g = new Generator([ 'separator' => '-', 'unique' => false ]);
+        $g = new Generator(['separator' => '-', 'unique' => false]);
         $this->assertEquals('this-is-a-test-user', $g->generate('1THIS iS 1^^*A *T(E)s$t USER!***(((   '));
     }
 }

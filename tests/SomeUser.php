@@ -8,5 +8,5 @@ class SomeUser extends TestModel
 {
     use GeneratesUsernames;
 
-    public $attributes = [ 'name' => 'Some User', 'username' => null ];
+    public $attributes = ['name' => 'Some User', 'username' => null];
 }
