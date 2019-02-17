@@ -1,18 +1,27 @@
 <?php
 
-require(__DIR__.'/../src/ServiceProvider.php');
-require(__DIR__.'/../src/FindSimilarUsernames.php');
-require(__DIR__.'/../src/Generator.php');
-require(__DIR__.'/TestModel.php');
-require(__DIR__.'/TestUser.php');
-require(__DIR__.'/SomeUser.php');
-require(__DIR__.'/CustomConfigUser.php');
+$loader = require(__DIR__.'/../vendor/autoload.php');
+$loader->addPsr4('TaylorNetwork\\Tests\\', __DIR__.'/');
+
+if(!function_exists('config')) {
+    function config($key, $default = null) 
+    {
+        $config = include_once(__DIR__.'/../src/config/username_generator.php');
+
+        if(array_key_exists($key, $config)) {
+            return $config[$key];
+        }
+
+        return $default;
+    } 
+}
 
 use Orchestra\Testbench\TestCase;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\Tests\TestUser;
 use TaylorNetwork\Tests\SomeUser;
 use TaylorNetwork\Tests\CustomConfigUser;
+use TaylorNetwork\Tests\TestMultipleUser;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
 
 class GeneratorTest extends TestCase
@@ -88,5 +97,18 @@ class GeneratorTest extends TestCase
     {
         $g = new Generator('Test User');
         $this->assertEquals('testuser1', $g->generate());
+    }
+
+    public function testUniqueMultiple()
+    {
+        $model = new TestMultipleUser();
+        $model->generateUsername();
+        $this->assertEquals('testuser2', $model->attributes['username']);
+    }
+
+    public function testTrimCharsWithSeparator()
+    {
+        $g = new Generator([ 'separator' => '-', 'unique' => false ]);
+        $this->assertEquals('this-is-a-test-user', $g->generate('1THIS iS 1^^*A *T(E)s$t USER!***(((   '));
     }
 }

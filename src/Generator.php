@@ -121,12 +121,23 @@ class Generator
             $this->name = $name;
         }
 
-        if(strtolower($this->case) !== 'mixed') {
+        // Defaults to mixed case if value is incorrect
+        if(strtolower($this->case) === 'lower' || strtolower($this->case) === 'upper') {
             $case = 'strto' . strtolower($this->case);
             $this->name = $case($this->name);
         }
 
-        $this->username = preg_replace('/[^a-zA-Z]/', $this->separator, $this->name);
+        // Remove all unwanted characters
+        $this->username = preg_replace('/[^a-zA-Z ]/', '', $this->name);
+
+        // Trim multiple spaces down to a single space
+        $this->username = preg_replace('/\s+/', ' ', $this->username);
+
+        // Trim any leading or trailing spaces
+        $this->username = trim($this->username);
+
+        // Replace spaces with separator
+        $this->username = preg_replace('/ /', $this->separator, $this->username);
 
         if($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
             if(($similar = count($this->model->findSimilarUsernames($this->username))) > 0) {
