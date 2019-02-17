@@ -2,7 +2,6 @@
 
 namespace TaylorNetwork\Tests;
 
-
 use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
 
 class TestModel
@@ -13,7 +12,7 @@ class TestModel
 
     public static function where(...$args)
     {
-        return new static;
+        return new static();
     }
 
     public function get()

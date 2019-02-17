@@ -2,28 +2,28 @@
 
 namespace TaylorNetwork\UsernameGenerator;
 
-
 trait GeneratesUsernames
 {
     /**
-     * Generate a username on save if one was not set
+     * Generate a username on save if one was not set.
      */
     public static function bootGeneratesUsernames()
     {
         static::saving(function ($model) {
-            if(!$model->getAttribute(config('username_generator.column', 'username'))) {
+            if (!$model->getAttribute(config('username_generator.column', 'username'))) {
                 $model->generateUsername();
             }
         });
     }
 
     /**
-     * Generate the username and save to model
+     * Generate the username and save to model.
      */
     public function generateUsername()
     {
         $generator = new Generator();
         $this->generatorConfig($generator);
+
         try {
             $this->attributes[config('username_generator.column', 'username')] = $generator->generate($this->getName());
         } catch (\Exception $e) {
@@ -32,7 +32,7 @@ trait GeneratesUsernames
     }
 
     /**
-     * Get the name attribute to convert to username
+     * Get the name attribute to convert to username.
      *
      * Override this method in your model to customize logic.
      *
@@ -44,7 +44,7 @@ trait GeneratesUsernames
     }
 
     /**
-     * Override config for the Generator instance
+     * Override config for the Generator instance.
      *
      * @param Generator $generator
      */

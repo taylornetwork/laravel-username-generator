@@ -7,50 +7,50 @@ use Exception;
 class Generator
 {
     /**
-     * Make a unique username
-     * 
-     * @var boolean
+     * Make a unique username.
+     *
+     * @var bool
      */
     protected $unique = true;
 
     /**
-     * Character case to use
-     * 
+     * Character case to use.
+     *
      * @var string
      */
     protected $case = 'lower';
 
     /**
-     * Word separator to use
-     * 
+     * Word separator to use.
+     *
      * @var string
      */
     protected $separator = '';
 
     /**
-     * Username database column
+     * Username database column.
      *
      * @var string
      */
     protected $column = 'username';
 
     /**
-     * Instance of model
-     * 
+     * Instance of model.
+     *
      * @var object
      */
     protected $model;
 
     /**
-     * Name to convert to username
-     * 
+     * Name to convert to username.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * The finished product
-     * 
+     * The finished product.
+     *
      * @var string
      */
     protected $username;
@@ -67,8 +67,8 @@ class Generator
     {
         $this->loadConfig();
 
-        if($configOrName) {
-            switch(gettype($configOrName)) {
+        if ($configOrName) {
+            switch (gettype($configOrName)) {
                 case 'array':
                     // Array of config to set
                     $this->setConfig($configOrName);
@@ -81,23 +81,22 @@ class Generator
                     break;
             }
         }
-
     }
 
     /**
-     * Set config
+     * Set config.
      *
      * @param string|array $key
-     * @param mixed $value
+     * @param mixed        $value
+     *
      * @return $this
      */
     public function setConfig($key, $value = null)
     {
-        if(gettype($key) === 'array') {
-            foreach($key as $k => $v) {
-
-                if($k === 'model' && gettype($v) === 'string') {
-                    $v = new $v;
+        if (gettype($key) === 'array') {
+            foreach ($key as $k => $v) {
+                if ($k === 'model' && gettype($v) === 'string') {
+                    $v = new $v();
                 }
 
                 $this->$k = $v;
@@ -110,20 +109,21 @@ class Generator
     }
 
     /**
-     * Generate a username from a name
+     * Generate a username from a name.
      *
      * @param string $name
+     *
      * @return string
      */
     public function generate($name = null)
     {
-        if($name) {
+        if ($name) {
             $this->name = $name;
         }
 
         // Defaults to mixed case if value is incorrect
-        if(strtolower($this->case) === 'lower' || strtolower($this->case) === 'upper') {
-            $case = 'strto' . strtolower($this->case);
+        if (strtolower($this->case) === 'lower' || strtolower($this->case) === 'upper') {
+            $case = 'strto'.strtolower($this->case);
             $this->name = $case($this->name);
         }
 
@@ -139,9 +139,9 @@ class Generator
         // Replace spaces with separator
         $this->username = preg_replace('/ /', $this->separator, $this->username);
 
-        if($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
-            if(($similar = count($this->model->findSimilarUsernames($this->username))) > 0) {
-                $this->username .= $this->separator . $similar;
+        if ($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
+            if (($similar = count($this->model->findSimilarUsernames($this->username))) > 0) {
+                $this->username .= $this->separator.$similar;
             }
         }
 
@@ -149,26 +149,28 @@ class Generator
     }
 
     /**
-     * Generate a username for a model
+     * Generate a username for a model.
      *
      * @param object $model
+     *
      * @return string
      */
     public function generateFor($model)
     {
-        if(gettype($model) === 'string') {
-            $model = new $model;
+        if (gettype($model) === 'string') {
+            $model = new $model();
         }
 
         return $this->generate($model->name);
     }
 
     /**
-     * Call generate
+     * Call generate.
      *
      * Included for backwards compatibility. Will eventually be removed.
      *
      * @param string $name
+     *
      * @return string
      */
     public function makeUsername($name = null)
@@ -177,18 +179,18 @@ class Generator
     }
 
     /**
-     * Load config if the config function exists
+     * Load config if the config function exists.
      */
     protected function loadConfig()
     {
-        if(function_exists('config')) {
+        if (function_exists('config')) {
             try {
                 $this->unique = config('username_generator.unique');
                 $this->case = config('username_generator.case');
                 $this->separator = config('username_generator.separator');
                 $this->column = config('username_generator.column');
                 $model = config('username_generator.model');
-                $this->model = new $model;
+                $this->model = new $model();
             } catch (Exception $e) {
                 // Ignore config loading errors...
             }
@@ -196,14 +198,14 @@ class Generator
     }
 
     /**
-     * __get
+     * __get.
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function __get($name)
     {
         return $this->$name;
     }
-
 }
