@@ -111,7 +111,7 @@ This package also comes with a `GeneratesUsernames` trait that you can add to yo
 
 ```php
 use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
-use TaylornNetwork\UsernameGenerator\FindSimilarUsernames;
+use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
 
 class User 
 {
@@ -126,7 +126,7 @@ Override the `generatorConfig` method in your model
 
 ```php
 use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
-use TaylornNetwork\UsernameGenerator\FindSimilarUsernames;
+use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
 
 class User 
 {
@@ -199,6 +199,8 @@ Returns
 ```
 SoMeWeIrDCapitaliZation
 ```
+
+*Note: if you pass an invalid value for the `case` option, mixed case will be used.*
 
 ## License
 
