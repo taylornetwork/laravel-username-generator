@@ -24,7 +24,10 @@
         "laravel": {
             "providers": [
                 "TaylorNetwork\\UsernameGenerator\\ServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "UsernameGenerator": "TaylorNetwork\\UsernameGenerator\\Facades\\UsernameGenerator"
+            }
         }
     }
 }

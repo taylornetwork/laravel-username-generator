@@ -2,6 +2,30 @@
 
 Easily generate unique usernames for a Laravel User Model
 
+1. [Changes](#changes)
+2. [Install](#install)
+3. [Set Up](#set-up)
+4. [Config](#config)
+5. [Basic Usage](#basic-usage)
+    - [generate($name)](#generatename)
+    - [generateFor($model)](#generateformodel)
+    - [GeneratesUsernames Trait](#generatesusernames-trait)
+    - [UsernameGenerator Facade](#usernamegenerator-facade)
+6. [Other Examples](#other-examples)
+    - [With a Separator](#with-a-separator)
+    - [Upper Case](#upper-case)
+    - [Mixed Case](#mixed-case)
+7. [License](#license)
+
+## Changes
+
+As of v2.0 
+
+- Removed support for deprecated `makeUsername` method
+- `Generator` will now only accept an array of config as the optional constructing arguments
+- Added `UsernameGenerator` facade
+
+
 ## Install
 
 Via Composer
@@ -54,7 +78,7 @@ You can override config on a new instance by `new Generator([ 'unique' => false 
 #### generate($name)
 Create a new instance and call `generate($name)`
 
-*Note: This has replaced, the old `makeUsername` method which is deprecated but still currently has support*
+*Note: This has replaced, the old `makeUsername` method which is deprecated ~~but still currently has support~~ no longer has support (as of v2.0)*
 
 ```php
 use TaylorNetwork\UsernameGenerator\Generator;
@@ -138,6 +162,18 @@ class User
 	}
 }
 
+```
+
+## UsernameGenerator Facade
+
+This package includes a `UsernameGenerator` facade for easy access
+
+```php
+UsernameGenerator::generate('Test User');
+
+UsernameGenerator::generateFor($user);
+
+UsernameGenerator::setConfig([ 'separator' => '_' ])->generate('Test User');
 ```
 
 ## Other Examples
