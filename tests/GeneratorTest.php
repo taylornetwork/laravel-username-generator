@@ -21,9 +21,9 @@ use TaylorNetwork\Tests\CustomConfigUser;
 use TaylorNetwork\Tests\SomeUser;
 use TaylorNetwork\Tests\TestMultipleUser;
 use TaylorNetwork\Tests\TestUser;
+use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
-use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 
 class GeneratorTest extends TestCase
 {
@@ -34,7 +34,7 @@ class GeneratorTest extends TestCase
 
     protected function getPackageAliases($app)
     {
-        return [ 'Gen' => UsernameGenerator::class ];
+        return ['Gen' => UsernameGenerator::class];
     }
 
     protected function getEnvironmentSetUp($app)

@@ -148,9 +148,10 @@ class Generator
     }
 
     /**
-     * Returns a new instance
+     * Returns a new instance.
      *
-     * @param array  $config
+     * @param array $config
+     *
      * @return Generator
      */
     public static function instance(array $config = [])
