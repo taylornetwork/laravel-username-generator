@@ -27,6 +27,6 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('UsernameGenerator', Generator::class);
     }
 }

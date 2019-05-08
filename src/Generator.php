@@ -58,29 +58,12 @@ class Generator
     /**
      * Generator constructor.
      *
-     * I don't like this setup but keeping it like this for backwards compatibility.
-     * This will eventually just be a config array as the only argument
-     *
-     * @param array|string $configOrName
+     * @param array $config
      */
-    public function __construct($configOrName = null)
+    public function __construct(array $config = [])
     {
         $this->loadConfig();
-
-        if ($configOrName) {
-            switch (gettype($configOrName)) {
-                case 'array':
-                    // Array of config to set
-                    $this->setConfig($configOrName);
-                    break;
-                case 'string':
-                    // Name string to set
-                    $this->name = $configOrName;
-                    break;
-                default:
-                    break;
-            }
-        }
+        $this->setConfig($config);
     }
 
     /**
@@ -165,17 +148,14 @@ class Generator
     }
 
     /**
-     * Call generate.
+     * Returns a new instance
      *
-     * Included for backwards compatibility. Will eventually be removed.
-     *
-     * @param string $name
-     *
-     * @return string
+     * @param array  $config
+     * @return Generator
      */
-    public function makeUsername($name = null)
+    public static function instance(array $config = [])
     {
-        return $this->generate($name);
+        return new static($config);
     }
 
     /**

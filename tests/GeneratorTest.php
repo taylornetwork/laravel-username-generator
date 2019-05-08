@@ -23,6 +23,7 @@ use TaylorNetwork\Tests\TestMultipleUser;
 use TaylorNetwork\Tests\TestUser;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
+use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 
 class GeneratorTest extends TestCase
 {
@@ -31,15 +32,14 @@ class GeneratorTest extends TestCase
         return [ServiceProvider::class];
     }
 
+    protected function getPackageAliases($app)
+    {
+        return [ 'Gen' => UsernameGenerator::class ];
+    }
+
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('username_generator.model', TestUser::class);
-    }
-
-    public function testOldMakeUsername()
-    {
-        $g = new Generator();
-        $this->assertEquals('testuser1', $g->makeUsername('Test User'));
     }
 
     public function testDefaultConfig()
@@ -92,12 +92,6 @@ class GeneratorTest extends TestCase
         $this->assertEquals('testuser1', $g->generate('Test, |User...'));
     }
 
-    public function testBackwardsConstructWithName()
-    {
-        $g = new Generator('Test User');
-        $this->assertEquals('testuser1', $g->generate());
-    }
-
     public function testUniqueMultiple()
     {
         $model = new TestMultipleUser();
@@ -109,5 +103,15 @@ class GeneratorTest extends TestCase
     {
         $g = new Generator(['separator' => '-', 'unique' => false]);
         $this->assertEquals('this-is-a-test-user', $g->generate('1THIS iS 1^^*A *T(E)s$t USER!***(((   '));
+    }
+
+    public function testFacade()
+    {
+        $this->assertEquals('testuser1', UsernameGenerator::generate('testuser'));
+    }
+
+    public function testAliasFacade()
+    {
+        $this->assertEquals('testuser1', Gen::generate('testuser'));
     }
 }
