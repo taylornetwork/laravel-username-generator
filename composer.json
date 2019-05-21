@@ -20,6 +20,11 @@
             "TaylorNetwork\\UsernameGenerator\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "TaylorNetwork\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [

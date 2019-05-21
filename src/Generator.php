@@ -2,191 +2,81 @@
 
 namespace TaylorNetwork\UsernameGenerator;
 
-use Exception;
+use Illuminate\Support\Arr;
+use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
 class Generator
 {
-    /**
-     * Make a unique username.
-     *
-     * @var bool
-     */
-    protected $unique = true;
+    use LoadsConfig;
 
-    /**
-     * Character case to use.
-     *
-     * @var string
-     */
-    protected $case = 'lower';
+    protected $driver;
 
-    /**
-     * Word separator to use.
-     *
-     * @var string
-     */
-    protected $separator = '';
-
-    /**
-     * Username database column.
-     *
-     * @var string
-     */
-    protected $column = 'username';
-
-    /**
-     * Instance of model.
-     *
-     * @var object
-     */
-    protected $model;
-
-    /**
-     * Name to convert to username.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * The finished product.
-     *
-     * @var string
-     */
-    protected $username;
-
-    /**
-     * Generator constructor.
-     *
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         $this->loadConfig();
         $this->setConfig($config);
     }
 
-    /**
-     * Set config.
-     *
-     * @param string|array $key
-     * @param mixed        $value
-     *
-     * @return $this
-     */
-    public function setConfig($key, $value = null)
+    public function generate(string $text): string
     {
-        if (gettype($key) === 'array') {
-            foreach ($key as $k => $v) {
-                if ($k === 'model' && gettype($v) === 'string') {
-                    $v = new $v();
-                }
-
-                $this->$k = $v;
-            }
-        } else {
-            $this->$key = $value;
+        if (!isset($this->driver)) {
+            $this->driver = Arr::first($this->getConfig('drivers'));
         }
 
+        return (new $this->driver)->withConfig($this->config())->generate($text);
+    }
+
+    public function generateFor($model): string
+    {
+        $drivers = $this->getConfig('drivers');
+
+        if (!isset($this->driver)) {
+            foreach ($drivers as $key => $driver) {
+                if (!empty($model->$key)) {
+                    $field = $key;
+                    break;
+                }
+            }
+
+            if (!isset($field)) {
+                return false;
+            }
+
+            return (new $drivers[$field])->withConfig($this->config())->generate($model->$field);
+        }
+
+        $field = array_search($this->driver, $drivers);
+        return (new $this->driver)->withConfig($this->config())->generate($model->$field);
+    }
+
+    public function setDriver(string $driverKey): self
+    {
+        $this->driver = $this->getConfig('drivers')[$driverKey];
         return $this;
     }
 
-    /**
-     * Generate a username from a name.
-     *
-     * @param string $name
-     *
-     * @return string
-     */
-    public function generate($name = null)
+    public function __call($name, $arguments)
     {
-        if ($name) {
-            $this->name = $name;
-        }
+        return $this->caller($name, $arguments);
+    }
 
-        // Defaults to mixed case if value is incorrect
-        if (strtolower($this->case) === 'lower' || strtolower($this->case) === 'upper') {
-            $case = 'strto'.strtolower($this->case);
-            $this->name = $case($this->name);
-        }
+    public static function __callStatic($name, $arguments)
+    {
+        return (new static)->caller($name, $arguments);
+    }
 
-        // Remove all unwanted characters
-        $this->username = preg_replace('/[^a-zA-Z ]/', '', $this->name);
+    private function caller($name, $arguments)
+    {
+        $drivers = $this->getConfig('drivers');
 
-        // Trim multiple spaces down to a single space
-        $this->username = preg_replace('/\s+/', ' ', $this->username);
+        if (substr($name, 0, 5) === 'using') {
+            $driverName = strtolower(substr($name, 5));
 
-        // Trim any leading or trailing spaces
-        $this->username = trim($this->username);
-
-        // Replace spaces with separator
-        $this->username = preg_replace('/ /', $this->separator, $this->username);
-
-        if ($this->unique && $this->model && method_exists($this->model, 'findSimilarUsernames')) {
-            if (($similar = count($this->model->findSimilarUsernames($this->username))) > 0) {
-                $this->username .= $this->separator.$similar;
+            if (array_key_exists($driverName, $drivers)) {
+                return (new $drivers[$driverName])->withConfig($this->config());
             }
         }
 
-        return $this->username;
-    }
-
-    /**
-     * Generate a username for a model.
-     *
-     * @param object $model
-     *
-     * @return string
-     */
-    public function generateFor($model)
-    {
-        if (gettype($model) === 'string') {
-            $model = new $model();
-        }
-
-        return $this->generate($model->name);
-    }
-
-    /**
-     * Returns a new instance.
-     *
-     * @param array $config
-     *
-     * @return Generator
-     */
-    public static function instance(array $config = [])
-    {
-        return new static($config);
-    }
-
-    /**
-     * Load config if the config function exists.
-     */
-    protected function loadConfig()
-    {
-        if (function_exists('config')) {
-            try {
-                $this->unique = config('username_generator.unique');
-                $this->case = config('username_generator.case');
-                $this->separator = config('username_generator.separator');
-                $this->column = config('username_generator.column');
-                $model = config('username_generator.model');
-                $this->model = new $model();
-            } catch (Exception $e) {
-                // Ignore config loading errors...
-            }
-        }
-    }
-
-    /**
-     * __get.
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function __get($name)
-    {
-        return $this->$name;
+        return false;
     }
 }

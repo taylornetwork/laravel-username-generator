@@ -1,5 +1,9 @@
 <?php
 
+use App\User;
+use TaylorNetwork\UsernameGenerator\Drivers\EmailDriver;
+use TaylorNetwork\UsernameGenerator\Drivers\NameDriver;
+
 return [
 
     'unique' => true,
@@ -16,7 +20,7 @@ return [
      |      - upper
      |          For all uppercase characters (ie: JOHNSMITH)
      |
-     |      - mixed
+     |   e   - mixed
      |          Allow mixed upper and lower cases for characters (ie: JohnSmith)
      |
      */
@@ -24,8 +28,14 @@ return [
 
     'separator' => '',
 
-    'model' => '\\App\\User',
+    'model' => User::class,
 
     'column' => 'username',
 
+    'allowed_characters' => 'a-zA-Z ',
+
+    'drivers' => [
+        'name' => NameDriver::class,
+        'email' => EmailDriver::class,
+    ],
 ];
