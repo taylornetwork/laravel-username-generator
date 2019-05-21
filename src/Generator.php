@@ -23,7 +23,7 @@ class Generator
             $this->driver = Arr::first($this->getConfig('drivers'));
         }
 
-        return (new $this->driver)->withConfig($this->config())->generate($text);
+        return (new $this->driver())->withConfig($this->config())->generate($text);
     }
 
     public function generateFor($model): string
@@ -42,16 +42,18 @@ class Generator
                 return false;
             }
 
-            return (new $drivers[$field])->withConfig($this->config())->generate($model->$field);
+            return (new $drivers[$field]())->withConfig($this->config())->generate($model->$field);
         }
 
         $field = array_search($this->driver, $drivers);
-        return (new $this->driver)->withConfig($this->config())->generate($model->$field);
+
+        return (new $this->driver())->withConfig($this->config())->generate($model->$field);
     }
 
     public function setDriver(string $driverKey): self
     {
         $this->driver = $this->getConfig('drivers')[$driverKey];
+
         return $this;
     }
 
@@ -62,7 +64,7 @@ class Generator
 
     public static function __callStatic($name, $arguments)
     {
-        return (new static)->caller($name, $arguments);
+        return (new static())->caller($name, $arguments);
     }
 
     private function caller($name, $arguments)
@@ -73,7 +75,7 @@ class Generator
             $driverName = strtolower(substr($name, 5));
 
             if (array_key_exists($driverName, $drivers)) {
-                return (new $drivers[$driverName])->withConfig($this->config());
+                return (new $drivers[$driverName]())->withConfig($this->config());
             }
         }
 
