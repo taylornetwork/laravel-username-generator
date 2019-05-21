@@ -15,9 +15,17 @@ Easily generate unique usernames for a Laravel User Model
     - [With a Separator](#with-a-separator)
     - [Upper Case](#upper-case)
     - [Mixed Case](#mixed-case)
-7. [License](#license)
+7. [Drivers](#drivers)
+8. [License](#license)
 
 ## Changes
+
+As of v2.1
+
+- Switched to a driver based conversion
+- Added email support
+
+*Note: Nothing should break with this update but let me know if you have any issues.*
 
 As of v2.0 
 
@@ -78,7 +86,7 @@ You can override config on a new instance by `new Generator([ 'unique' => false 
 #### generate($name)
 Create a new instance and call `generate($name)`
 
-*Note: This has replaced, the old `makeUsername` method which is deprecated ~~but still currently has support~~ no longer has support (as of v2.0)*
+*Note: This has replaced, the old `makeUsername` method which ~~is deprecated but still currently has support~~ no longer has support (as of v2.0)*
 
 ```php
 use TaylorNetwork\UsernameGenerator\Generator;
@@ -237,6 +245,30 @@ SoMeWeIrDCapitaliZation
 ```
 
 *Note: if you pass an invalid value for the `case` option, mixed case will be used.*
+
+## Drivers
+
+2 drivers are included, `NameDriver` (default) and `EmailDriver`
+
+To use a specific driver, if none is specified the default is used.
+
+```php
+UsernameGenerator::usingEmail()->generate('testuser@example.com');
+
+// Returns
+
+'testuser'
+```
+OR
+```php
+$generator = new Generator();
+$generator->setDriver('email');
+$generator->generate('test.user77@example.com');
+
+// Returns
+
+'testuser'
+```
 
 ## License
 

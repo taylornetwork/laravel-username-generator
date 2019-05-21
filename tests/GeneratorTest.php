@@ -1,26 +1,9 @@
 <?php
 
-$loader = require __DIR__.'/../vendor/autoload.php';
-$loader->addPsr4('TaylorNetwork\\Tests\\', __DIR__.'/');
+namespace TaylorNetwork\Tests;
 
-if (!function_exists('config')) {
-    function config($key, $default = null)
-    {
-        $config = include_once __DIR__.'/../src/config/username_generator.php';
-
-        if (array_key_exists($key, $config)) {
-            return $config[$key];
-        }
-
-        return $default;
-    }
-}
-
+use Gen;
 use Orchestra\Testbench\TestCase;
-use TaylorNetwork\Tests\CustomConfigUser;
-use TaylorNetwork\Tests\SomeUser;
-use TaylorNetwork\Tests\TestMultipleUser;
-use TaylorNetwork\Tests\TestUser;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
@@ -113,5 +96,23 @@ class GeneratorTest extends TestCase
     public function testAliasFacade()
     {
         $this->assertEquals('testuser1', Gen::generate('testuser'));
+    }
+
+    public function testEmail()
+    {
+        $this->assertEquals('testuser1', UsernameGenerator::usingEmail()->generate('test.user@example.com'));
+    }
+
+    public function testSetDriver()
+    {
+        $generator = new Generator();
+        $generator->setDriver('email');
+        $this->assertEquals('testuser1', $generator->generate('test_user777@example.com'));
+    }
+
+    public function testAllowExtraChars()
+    {
+        $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ', 'unique' => false]);
+        $this->assertEquals('use-r_test777', $generator->usingEmail()->generate('use-r_test777@example.com'));
     }
 }
