@@ -35,7 +35,7 @@ return [
     'allowed_characters' => 'a-zA-Z ',
 
     'drivers' => [
-        'name' => NameDriver::class,
+        'name'  => NameDriver::class,
         'email' => EmailDriver::class,
     ],
 ];

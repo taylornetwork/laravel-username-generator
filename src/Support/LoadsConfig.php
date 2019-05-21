@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaylorNetwork\UsernameGenerator\Support;
-
 
 use Exception;
 
@@ -16,6 +14,7 @@ trait LoadsConfig
     {
         try {
             $model = $this->getConfig('model');
+
             return new $model();
         } catch (Exception $exception) {
             return false;
@@ -63,7 +62,7 @@ trait LoadsConfig
         try {
             $this->config = config('username_generator');
         } catch (Exception $exception) {
-            $this->config = include __DIR__ . '/../config/username_generator.php';
+            $this->config = include __DIR__.'/../config/username_generator.php';
         }
 
         $this->configLoaded = true;
@@ -73,7 +72,7 @@ trait LoadsConfig
     {
         try {
             if (!preg_match('/^username_generator\.', $key)) {
-                $key = 'username_generator.' . $key;
+                $key = 'username_generator.'.$key;
             }
 
             return config($key, $default);
@@ -94,6 +93,7 @@ trait LoadsConfig
     public function withConfig(array $config): self
     {
         $this->config = $config;
+
         return $this;
     }
 }

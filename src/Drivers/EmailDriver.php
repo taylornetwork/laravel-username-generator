@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaylorNetwork\UsernameGenerator\Drivers;
-
 
 class EmailDriver extends BaseDriver
 {

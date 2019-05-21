@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
@@ -41,15 +40,17 @@ abstract class BaseDriver
     public function convertCase(string $text): string
     {
         if (strtolower($this->getConfig('case')) === 'lower' || strtolower($this->getConfig('case')) === 'upper') {
-            $case = 'strto' . strtolower($this->getConfig('case'));
+            $case = 'strto'.strtolower($this->getConfig('case'));
+
             return $case($text);
         }
+
         return $text;
     }
 
     public function stripUnwantedCharacters(string $text): string
     {
-        return preg_replace('/[^' . $this->getConfig('allowed_characters') . ']/', '', $text);
+        return preg_replace('/[^'.$this->getConfig('allowed_characters').']/', '', $text);
     }
 
     public function collapseWhitespace(string $text): string
@@ -66,9 +67,10 @@ abstract class BaseDriver
     {
         if ($this->getConfig('unique') && $this->model() && method_exists($this->model(), 'findSimilarUsernames')) {
             if (($similar = count($this->model()->findSimilarUsernames($text))) > 0) {
-                return $text . $this->getConfig('separator') . $similar;
+                return $text.$this->getConfig('separator').$similar;
             }
         }
+
         return $text;
     }
 
