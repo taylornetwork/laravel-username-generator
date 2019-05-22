@@ -65,6 +65,20 @@ class User extends Authenticatable
 }    
 ```
 
+### Use username to login
+
+To use the username to login instead of the email you need to add the following to your `LoginController`
+
+```php
+public function username()
+{
+    return 'username';
+}
+```
+
+See Username Customization in [Laravel Authentication Docs](https://laravel.com/docs/5.8/authentication#included-authenticating)
+
+
 ## Config
 
 By default the `Generator` class has the following configuration:
