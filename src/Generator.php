@@ -11,7 +11,7 @@ class Generator
     use LoadsConfig;
 
     /**
-     * The driver to use to convert
+     * The driver to use to convert.
      *
      * @var BaseDriver
      */
@@ -29,9 +29,10 @@ class Generator
     }
 
     /**
-     * Generate a username
+     * Generate a username.
      *
      * @param string $text
+     *
      * @return string
      */
     public function generate(string $text): string
@@ -44,9 +45,10 @@ class Generator
     }
 
     /**
-     * Generate a username from a given model
+     * Generate a username from a given model.
      *
      * @param object $model
+     *
      * @return string
      */
     public function generateFor($model): string
@@ -74,9 +76,10 @@ class Generator
     }
 
     /**
-     * Set the driver to use
+     * Set the driver to use.
      *
      * @param string $driverKey
+     *
      * @return Generator
      */
     public function setDriver(string $driverKey): self
@@ -87,10 +90,11 @@ class Generator
     }
 
     /**
-     * __call
+     * __call.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -99,10 +103,11 @@ class Generator
     }
 
     /**
-     * __callStatic
+     * __callStatic.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
+     *
      * @return mixed
      */
     public static function __callStatic($name, $arguments)
@@ -111,10 +116,11 @@ class Generator
     }
 
     /**
-     * Handle __call and __callStatic
+     * Handle __call and __callStatic.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
+     *
      * @return mixed
      */
     private function caller($name, $arguments)

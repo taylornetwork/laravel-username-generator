@@ -7,9 +7,10 @@ class EmailDriver extends BaseDriver
     public $field = 'email';
 
     /**
-     * Strip everything after the @ symbol
+     * Strip everything after the @ symbol.
      *
      * @param string $text
+     *
      * @return string
      */
     public function beforeConvertCase(string $text): string

@@ -119,7 +119,7 @@ class GeneratorTest extends TestCase
     public function testMinLength()
     {
         $username = UsernameGenerator::setConfig('min_length', 6)->generate('Te St');
-        $this->assertTrue((bool)preg_match('/test\d\d/', $username));
+        $this->assertTrue((bool) preg_match('/test\d\d/', $username));
         $this->assertEquals(6, strlen($username));
     }
 
