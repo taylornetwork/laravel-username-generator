@@ -8,6 +8,10 @@ return [
 
     'unique' => true,
 
+    'min_length' => 0,
+
+    'throw_exception_on_too_short' => false,
+
     /*
      |----------------------------------------------------------------------------
      | Username Character Case
@@ -20,7 +24,7 @@ return [
      |      - upper
      |          For all uppercase characters (ie: JOHNSMITH)
      |
-     |   e   - mixed
+     |      - mixed
      |          Allow mixed upper and lower cases for characters (ie: JohnSmith)
      |
      */

@@ -2,6 +2,7 @@
 
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
+use Exception;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
 abstract class BaseDriver
@@ -28,6 +29,25 @@ abstract class BaseDriver
         $text = $this->addSeparator($text);
         $text = $this->makeUnique($text);
         $text = $this->postHook($text);
+
+        if ($this->getConfig('min_length', 0) > 0) {
+            if (strlen($text) < $this->getConfig('min_length')) {
+                $text = $this->tooShortAction($text);
+            }
+        }
+
+        return $text;
+    }
+
+    public function tooShortAction(string $text): string
+    {
+        if ($this->getConfig('throw_exception_on_too_short')) {
+            throw new Exception('Generated username does not meet minimum length of ' . $this->getConfig('min_length'));
+        }
+
+        while (strlen($text) < $this->getConfig('min_length')) {
+            $text .= rand(0, 9);
+        }
 
         return $text;
     }
