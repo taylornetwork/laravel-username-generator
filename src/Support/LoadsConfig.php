@@ -7,7 +7,7 @@ use Exception;
 trait LoadsConfig
 {
     /**
-     * Loaded config
+     * Loaded config.
      *
      * @var array
      */
@@ -21,7 +21,7 @@ trait LoadsConfig
     protected $configLoaded = false;
 
     /**
-     * Access an instance of the unique to model
+     * Access an instance of the unique to model.
      *
      * @return bool
      */
@@ -37,10 +37,11 @@ trait LoadsConfig
     }
 
     /**
-     * Get a config value
+     * Get a config value.
      *
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return mixed
      */
     public function getConfig(string $key, $default = null)
@@ -59,10 +60,11 @@ trait LoadsConfig
     }
 
     /**
-     * Set config
+     * Set config.
      *
      * @param string|array $key
-     * @param mixed $value
+     * @param mixed        $value
+     *
      * @return LoadsConfig
      */
     public function setConfig($key, $value = null): self
@@ -87,7 +89,7 @@ trait LoadsConfig
     }
 
     /**
-     * Load config from Laravel config file
+     * Load config from Laravel config file.
      */
     public function loadConfig()
     {
@@ -101,10 +103,11 @@ trait LoadsConfig
     }
 
     /**
-     * Get Laravel config
+     * Get Laravel config.
      *
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return mixed
      */
     public static function laravelConfig(string $key, $default = null)
@@ -121,7 +124,7 @@ trait LoadsConfig
     }
 
     /**
-     * All the loaded config
+     * All the loaded config.
      *
      * @return array
      */
@@ -135,9 +138,10 @@ trait LoadsConfig
     }
 
     /**
-     * Import existing config
+     * Import existing config.
      *
      * @param array $config
+     *
      * @return LoadsConfig
      */
     public function withConfig(array $config): self
