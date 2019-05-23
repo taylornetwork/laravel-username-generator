@@ -6,10 +6,25 @@ use Exception;
 
 trait LoadsConfig
 {
+    /**
+     * Loaded config.
+     *
+     * @var array
+     */
     protected $config = [];
 
+    /**
+     * Has the config been loaded?
+     *
+     * @var bool
+     */
     protected $configLoaded = false;
 
+    /**
+     * Access an instance of the unique to model.
+     *
+     * @return bool
+     */
     public function model()
     {
         try {
@@ -21,6 +36,14 @@ trait LoadsConfig
         }
     }
 
+    /**
+     * Get a config value.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
     public function getConfig(string $key, $default = null)
     {
         if (!$this->configLoaded) {
@@ -36,6 +59,14 @@ trait LoadsConfig
         return self::laravelConfig($key, $default);
     }
 
+    /**
+     * Set config.
+     *
+     * @param string|array $key
+     * @param mixed        $value
+     *
+     * @return LoadsConfig
+     */
     public function setConfig($key, $value = null): self
     {
         if (!$this->configLoaded) {
@@ -57,6 +88,9 @@ trait LoadsConfig
         return $this;
     }
 
+    /**
+     * Load config from Laravel config file.
+     */
     public function loadConfig()
     {
         try {
@@ -68,6 +102,14 @@ trait LoadsConfig
         $this->configLoaded = true;
     }
 
+    /**
+     * Get Laravel config.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
     public static function laravelConfig(string $key, $default = null)
     {
         try {
@@ -81,6 +123,11 @@ trait LoadsConfig
         }
     }
 
+    /**
+     * All the loaded config.
+     *
+     * @return array
+     */
     public function config()
     {
         if (!$this->configLoaded) {
@@ -90,9 +137,17 @@ trait LoadsConfig
         return $this->config;
     }
 
+    /**
+     * Import existing config.
+     *
+     * @param array $config
+     *
+     * @return LoadsConfig
+     */
     public function withConfig(array $config): self
     {
         $this->config = $config;
+        $this->configLoaded = true;
 
         return $this;
     }

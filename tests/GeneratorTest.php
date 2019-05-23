@@ -115,4 +115,16 @@ class GeneratorTest extends TestCase
         $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ', 'unique' => false]);
         $this->assertEquals('use-r_test777', $generator->usingEmail()->generate('use-r_test777@example.com'));
     }
+
+    public function testMinLength()
+    {
+        $username = UsernameGenerator::setConfig('min_length', 6)->generate('Te St');
+        $this->assertTrue((bool) preg_match('/test\d\d/', $username));
+        $this->assertEquals(6, strlen($username));
+    }
+
+    public function testIgnoreMinLength()
+    {
+        $this->assertEquals('t', UsernameGenerator::setConfig('unique', false)->generate('T'));
+    }
 }
