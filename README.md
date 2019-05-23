@@ -15,10 +15,16 @@ Easily generate unique usernames for a Laravel User Model
     - [With a Separator](#with-a-separator)
     - [Upper Case](#upper-case)
     - [Mixed Case](#mixed-case)
+    - [Minimum Length](#minimum-length)
 7. [Drivers](#drivers)
+    - [Extending](#extending)
 8. [License](#license)
 
 ## Changes
+
+As of v2.2
+
+- Added support for minimum length
 
 As of v2.1
 
@@ -260,6 +266,42 @@ SoMeWeIrDCapitaliZation
 
 *Note: if you pass an invalid value for the `case` option, mixed case will be used.*
 
+### Minimum Length
+
+If you want to enforce a minimum length for usernames generated change the `min_length` option in `config/username_generator.php` 
+
+```php
+'min_length' => 6,
+```
+
+By default if the generator generates a username less than the minimum length it will pad the end of it with a random digit between 0 and 9.
+
+For example
+
+```php
+
+UsernameGenerator::generate('test');
+
+// Would return the following where 0 is a random digit
+
+'test00' 
+
+```
+
+**Alternatively you can throw an exception when the minimum length has not been reached**
+
+In `config/username_generator.php` set
+
+```php
+'throw_exception_on_too_short' => true,
+```
+
+```php
+UsernameGenerator::generate('test');
+```
+
+Would throw a `UsernameTooShortException`
+
 ## Drivers
 
 2 drivers are included, `NameDriver` (default) and `EmailDriver`
@@ -282,6 +324,37 @@ $generator->generate('test.user77@example.com');
 // Returns
 
 'testuser'
+```
+
+### Extending
+
+You can make your own custom drivers that extend `TaylorNetwork\UsernameGenerator\Drivers\BaseDriver` or override an existing one.
+
+For example if you wanted to append `-auto` to all automatically generated usernames, you could make a new driver in `App\Drivers\AppendDriver`
+
+```php
+namespace App\Drivers\AppendDriver;
+
+use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
+
+class AppendDriver extends BaseDriver
+{	
+    public $field = 'name';
+    
+    public function afterMakeUnique(string $text): string
+    {
+    	return $text . '-auto';
+    }
+}
+```
+
+And then in `config/username_generator.php` add the driver to the top of the drivers array to use it as default.
+
+```php
+'drivers' => [
+	'append' => \App\Drivers\AppendDriver::class,
+        ...
+    ],
 ```
 
 ## License
