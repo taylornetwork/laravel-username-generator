@@ -333,7 +333,7 @@ You can make your own custom drivers that extend `TaylorNetwork\UsernameGenerato
 For example if you wanted to append `-auto` to all automatically generated usernames, you could make a new driver in `App\Drivers\AppendDriver`
 
 ```php
-namespace App\Drivers\AppendDriver;
+namespace App\Drivers;
 
 use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
 
