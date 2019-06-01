@@ -53,7 +53,7 @@ trait GeneratesUsernames
     }
 
     /**
-     * Get the name of the field to use as a name
+     * Get the name of the field to use as a name.
      *
      * @return string
      */
