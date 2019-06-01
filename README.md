@@ -22,18 +22,23 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
-As of v2.2
+**v2.2.1**
+
+- Fixed bug where if a custom column name was used and set using `generatorConfig` it was not being passed through.
+- Fixed support for overriding the `getName` method from `GeneratesUsernames`
+
+**v2.2**
 
 - Added support for minimum length
 
-As of v2.1
+**v2.1**
 
 - Switched to a driver based conversion
 - Added email support
 
 *Note: Nothing should break with this update but let me know if you have any issues.*
 
-As of v2.0 
+**v2.0**
 
 - Removed support for deprecated `makeUsername` method
 - `Generator` will now only accept an array of config as the optional constructing arguments
@@ -191,6 +196,24 @@ class User
 }
 
 ```
+
+If you need to modify the data before handing it off to the generator, override the `getField` method on your model
+
+```php
+class User 
+{
+	...
+	
+	public function getField(): string
+	{	
+		return $this->formatted_name;
+	}
+	
+	...
+}
+```
+
+*Note: if your code still uses a custom `getName`, it will still work, however it was replaced with `getField` in v2.1 when driver support was added.*
 
 ## UsernameGenerator Facade
 

@@ -12,9 +12,7 @@ trait GeneratesUsernames
     public static function bootGeneratesUsernames(): void
     {
         static::saving(function ($model) {
-            if (!$model->getAttribute(config('username_generator.column', 'username'))) {
-                $model->generateUsername();
-            }
+            $model->generateUsername();
         });
     }
 
@@ -26,10 +24,14 @@ trait GeneratesUsernames
         $generator = new Generator();
         $this->generatorConfig($generator);
 
-        try {
-            $this->attributes[config('username_generator.column', 'username')] = $generator->generate($this->getField());
-        } catch (Exception $e) {
-            // Failed but don't halt saving the model
+        $column = $generator->getConfig('column', 'username');
+
+        if (empty($this->getAttribute($column))) {
+            try {
+                $this->attributes[$column] = $generator->generate($this->getField());
+            } catch (Exception $e) {
+                // Failed but don't halt saving the model
+            }
         }
     }
 
@@ -42,9 +44,19 @@ trait GeneratesUsernames
      */
     public function getField(): string
     {
+        // Support pre-v2 getName method overrides
+        if (method_exists($this, 'getName')) {
+            return $this->getName();
+        }
+
         return $this->getAttribute($this->generatorFieldName());
     }
 
+    /**
+     * Get the name of the field to use as a name.
+     *
+     * @return string
+     */
     public function generatorFieldName(): string
     {
         return 'name';
