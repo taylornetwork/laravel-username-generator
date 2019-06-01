@@ -127,4 +127,11 @@ class GeneratorTest extends TestCase
     {
         $this->assertEquals('t', UsernameGenerator::setConfig('unique', false)->generate('T'));
     }
+
+    public function testCustomColumn()
+    {
+        $model = new CustomColumn();
+        $model->generateUsername();
+        $this->assertEquals('custom*column*1', $model->attributes['identifier']);
+    }
 }
