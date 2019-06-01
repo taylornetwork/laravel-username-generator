@@ -22,7 +22,7 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
-**v2.2.1**
+**v2.2.2**
 
 - Fixed bug where if a custom column name was used and set using `generatorConfig` it was not being passed through.
 - Fixed support for overriding the `getName` method from `GeneratesUsernames`
