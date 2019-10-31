@@ -35,7 +35,7 @@ class Generator
      *
      * @return string
      */
-    public function generate(string $text): string
+    public function generate(string $text = null): string
     {
         if (!isset($this->driver)) {
             $this->driver = Arr::first($this->getConfig('drivers'));
@@ -84,7 +84,11 @@ class Generator
      */
     public function setDriver(string $driverKey): self
     {
-        $this->driver = $this->getConfig('drivers')[$driverKey];
+        if (class_exists($driverKey)) {
+            $this->driver = $driverKey;
+        } else {
+            $this->driver = $this->getConfig('drivers')[$driverKey];
+        }
 
         return $this;
     }

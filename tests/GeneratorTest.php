@@ -134,4 +134,9 @@ class GeneratorTest extends TestCase
         $model->generateUsername();
         $this->assertEquals('custom*column*1', $model->attributes['identifier']);
     }
+
+    public function testRandom()
+    {
+        $this->assertIsString(UsernameGenerator::generate());
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
+use Illuminate\Support\Str;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 use TaylorNetwork\UsernameGenerator\Support\UsernameTooShortException;
 
@@ -46,6 +47,14 @@ abstract class BaseDriver
         $this->loadConfig();
     }
 
+    public function getWord($type = 'noun'): string
+    {
+        $type = Str::plural(strtolower($type));
+        $max = count($this->getConfig('dictionary')[$type]) - 1;
+
+        return $this->getConfig('dictionary')[$type][rand(0, $max)];
+    }
+
     /**
      * Generate the username.
      *
@@ -55,8 +64,12 @@ abstract class BaseDriver
      *
      * @return string
      */
-    public function generate(string $text): string
+    public function generate(string $text = null): string
     {
+        if ($text === null) {
+            $text = $this->getWord('adjective').' '.$this->getWord('noun');
+        }
+
         $this->original = $text;
 
         foreach ($this->order as $method) {
