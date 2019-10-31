@@ -84,7 +84,11 @@ class Generator
      */
     public function setDriver(string $driverKey): self
     {
-        $this->driver = $this->getConfig('drivers')[$driverKey];
+        if(class_exists($driverKey)) {
+            $this->driver = $driverKey;
+        } else {
+            $this->driver = $this->getConfig('drivers')[$driverKey];
+        }
 
         return $this;
     }

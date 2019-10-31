@@ -353,6 +353,40 @@ $generator->generate('test.user77@example.com');
 
 You can make your own custom drivers that extend `TaylorNetwork\UsernameGenerator\Drivers\BaseDriver` or override an existing one.
 
+Custom drivers require a `public $field` property to be set which is the name of the field on the model to use to generate the username.
+
+Drivers will perform the following operations in order:
+
+```php
+[
+	'convertCase',                 // Converts the case of the field to the set value (upper, lower, mixed)
+	'stripUnwantedCharacters',     // Removes all unwanted characters from the text
+	'collapseWhitespace',          // Collapses any whitespace to a single space
+	'addSeparator',                // Converts all spaces to separator
+	'makeUnique',                  // Makes the username unique (if set)
+]
+``` 
+
+In your custom driver you can add a method to perform an operation before or after any of the above operations. 
+
+```php
+public function beforeConvertCase(string $text): string 
+{
+
+	// --
+	
+}
+
+public function afterStripUnwantedCharacters(string $text): string 
+{
+
+	// --
+	
+}
+```
+
+#### Example
+
 For example if you wanted to append `-auto` to all automatically generated usernames, you could make a new driver in `App\Drivers\AppendDriver`
 
 ```php
