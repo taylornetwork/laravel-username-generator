@@ -22,6 +22,10 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
+**v2.3**
+
+- Added support for random dictionary based usernames if a name is not provided. See the [generate](#generatename) method
+
 **v2.2.2**
 
 - Fixed bug where if a custom column name was used and set using `generatorConfig` it was not being passed through.
@@ -125,10 +129,23 @@ $username = $generator->generate('Test User');
 Returns
 
 ```php
-
 'testuser'
-
 ```
+
+If you do not provide a name to the generate method an adjective and noun will be chosen as the name at random, using noun and adjective word lists from [alenoir/username-generator](https://github.com/alenoir/username-generator), which will then be converted to a username.
+
+```php
+use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
+
+$username = UsernameGenerator::generate();
+```
+
+Returns something similar to
+
+```php
+'monogamousswish'
+```
+
 
 #### generateFor($model)
 Create a new instance and call `generateFor($model)`
