@@ -16,8 +16,8 @@ trait FindSimilarUsernames
      */
     public function findSimilarUsernames($username)
     {
-        if (count(static::where(config('username_generator.column', 'username'), $username)->get()) === 0) {
-            return 0;
+        if (count($data = static::where(config('username_generator.column', 'username'), $username)->get()) === 0) {
+            return $data;
         }
 
         return static::where(config('username_generator.column', 'username'), 'LIKE', $username.'%')->get();
