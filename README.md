@@ -1,5 +1,8 @@
 # Laravel Username Generator
 
+![Stable](https://poser.pugx.org/taylornetwork/laravel-username-generator/v/stable)
+![Downloads](https://poser.pugx.org/taylornetwork/laravel-username-generator/downloads)
+![License](https://poser.pugx.org/taylornetwork/laravel-username-generator/license)
 ![Tests](https://github.com/taylornetwork/laravel-username-generator/workflows/Tests/badge.svg)
 ![StyleCI](https://github.styleci.io/repos/104370109/shield?branch=master)
 
