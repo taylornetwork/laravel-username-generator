@@ -1,6 +1,7 @@
 # Laravel Username Generator
 
 ![Tests](https://github.com/taylornetwork/laravel-username-generator/workflows/Tests/badge.svg)
+![StyleCI](https://github.styleci.io/repos/104370109/shield?branch=master)
 
 Easily generate unique usernames for a Laravel User Model
 
