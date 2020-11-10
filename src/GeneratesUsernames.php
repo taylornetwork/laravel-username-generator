@@ -40,9 +40,9 @@ trait GeneratesUsernames
      *
      * Override this method in your model to customize logic.
      *
-     * @return string
+     * @return string|null
      */
-    public function getField(): string
+    public function getField()
     {
         // Support pre-v2 getName method overrides
         if (method_exists($this, 'getName')) {
