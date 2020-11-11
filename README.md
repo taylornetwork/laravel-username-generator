@@ -28,6 +28,12 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
+**v2.4**
+
+- This is a minor change but if you're using older versions of Laravel you may need to update your config file.
+- Changed default User model from `App\User` to `App\Models\User` to mirror new Laravel versions (8.0+).
+- Moved the adjective and noun word lists from the config file to a separate file, making the published config smaller and allowing you to create your own word lists if you wish.
+
 **v2.3**
 
 - Added support for random dictionary based usernames if a name is not provided. See the [generate](#generatename) method
@@ -85,6 +91,16 @@ class User extends Authenticatable
 
 }    
 ```
+
+### Laravel 7 and below
+
+If you're using Laravel 7 or below you'll need to publish the config using 
+
+```bash
+$ php artisan vendor:publish --provider="TaylorNetwork\UsernameGenerator\ServiceProvider"
+```
+
+And update your `app/config/username_generator.php` file to match your User model namespace (`App\User`).
 
 ### Use username to login
 
