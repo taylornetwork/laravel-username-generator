@@ -65,7 +65,7 @@ return [
      */
     'dictionary' => [
         'adjectives' => [],
-        'nouns' => [],
+        'nouns'      => [],
     ],
 
 ];
