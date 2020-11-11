@@ -100,7 +100,7 @@ If you're using Laravel 7 or below you'll need to publish the config using
 $ php artisan vendor:publish --provider="TaylorNetwork\UsernameGenerator\ServiceProvider"
 ```
 
-And update your `app/config/username_generator.php` file to match your User model namespace (`App\User`).
+And update your `config/username_generator.php` file to match your User model namespace (`App\User`).
 
 ### Use username to login
 
