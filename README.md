@@ -236,19 +236,20 @@ class User
 
 ```
 
-If you need to modify the data before handing it off to the generator, override the `getField` method on your model
+If you need to modify the data before handing it off to the generator, override the `getField` method on your model. 
+For example if you have a first and last name rather than a single name field, you'll need to add this to your model.
 
 ```php
 class User 
 {
-	...
+	// ...
 	
 	public function getField(): string
 	{	
-		return $this->formatted_name;
+		return $this->first_name . ' ' . $this->last_name;
 	}
 	
-	...
+	// ...
 }
 ```
 
