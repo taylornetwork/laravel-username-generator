@@ -1,6 +1,6 @@
 <?php
 
-use App\User;
+use App\Models\User;
 use TaylorNetwork\UsernameGenerator\Drivers\EmailDriver;
 use TaylorNetwork\UsernameGenerator\Drivers\NameDriver;
 
