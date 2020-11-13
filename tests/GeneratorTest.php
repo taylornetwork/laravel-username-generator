@@ -72,19 +72,19 @@ class GeneratorTest extends TestCase
     public function testGenerateForModel()
     {
         $g = new Generator();
-        $this->assertEquals('testuser1', $g->generateFor(new DefaultUser([ 'name' => 'Test User' ])));
+        $this->assertEquals('testuser1', $g->generateFor(new DefaultUser(['name' => 'Test User'])));
     }
 
     public function testTrait()
     {
-        $model = new TraitedUser([ 'name' => 'Test User']);
+        $model = new TraitedUser(['name' => 'Test User']);
         $model->generateUsername();
         $this->assertEquals('testuser1', $model->getAttribute('username'));
     }
 
     public function testTraitConfig()
     {
-        $model = new CustomConfigUser([ 'name' => 'Custom Config']);
+        $model = new CustomConfigUser(['name' => 'Custom Config']);
         $model->generateUsername();
         $this->assertEquals('custom_config', $model->getAttribute('username'));
     }
@@ -97,7 +97,7 @@ class GeneratorTest extends TestCase
 
     public function testUniqueMultiple()
     {
-        $model = new TraitedUser(['name' => 'Multi Test' ]);
+        $model = new TraitedUser(['name' => 'Multi Test']);
         $model->generateUsername();
         $this->assertEquals('multitest2', $model->getAttribute('username'));
     }
@@ -150,7 +150,7 @@ class GeneratorTest extends TestCase
 
     public function testCustomColumn()
     {
-        $model = new CustomColumnUser([ 'name' => 'Custom Column' ]);
+        $model = new CustomColumnUser(['name' => 'Custom Column']);
         $model->generateUsername();
         $this->assertEquals('custom*column*1', $model->getAttribute('identifier'));
     }

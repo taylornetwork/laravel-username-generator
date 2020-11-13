@@ -1,6 +1,5 @@
 <?php
 
-
 namespace TaylorNetwork\Tests\Environment;
 
 use Illuminate\Database\Eloquent\Model;
