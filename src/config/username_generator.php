@@ -53,6 +53,11 @@ return [
     'allowed_characters' => 'a-zA-Z ',
 
     /*
+     * Prefer using REGEXP 
+     */
+    'prefer_regexp' => true,
+
+    /*
      * Loaded drivers for converting to a username
      */
     'drivers' => [

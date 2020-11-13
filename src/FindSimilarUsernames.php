@@ -2,6 +2,8 @@
 
 namespace TaylorNetwork\UsernameGenerator;
 
+use Illuminate\Database\QueryException;
+
 trait FindSimilarUsernames
 {
     /**
@@ -16,10 +18,38 @@ trait FindSimilarUsernames
      */
     public function findSimilarUsernames($username)
     {
-        if (count($data = static::where(config('username_generator.column', 'username'), $username)->get()) === 0) {
-            return $data;
+        $preferRegexp = $this->preferRegexp ?? config('username_generator.prefer_regexp', true);
+
+        if(!$preferRegexp) {
+            return $this->searchUsingLike($username);
         }
 
-        return static::where(config('username_generator.column', 'username'), 'LIKE', $username.'%')->get();
+        try {
+            return $this->searchUsingRegexp($username);
+        } catch (QueryException $exception) {
+            return $this->searchUsingLike($username);
+        }
+    }
+
+    private function searchUsingLike($username)
+    {
+        $exactMatches = static::where($this->getColumn(), $username)->get();
+
+        if ($exactMatches) {
+            return static::where($this->getColumn(), 'LIKE', $username.'%')->get();
+        }
+
+        return $exactMatches;
+    }
+
+    private function searchUsingRegexp($username)
+    {
+        $column = $this->getColumn();
+        return static::whereRaw("$column REGEXP '{$username}([0-9]*)?$'")->get();
+    }
+
+    private function getColumn()
+    {
+        return $this->usernameColumn ?? config('username_generator.column', 'username');
     }
 }
