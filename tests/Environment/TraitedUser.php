@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaylorNetwork\Tests\Environment;
-
 
 use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
 

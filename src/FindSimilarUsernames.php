@@ -20,7 +20,7 @@ trait FindSimilarUsernames
     {
         $preferRegexp = $this->preferRegexp ?? config('username_generator.prefer_regexp', true);
 
-        if(!$preferRegexp) {
+        if (!$preferRegexp) {
             return $this->searchUsingLike($username);
         }
 
@@ -45,6 +45,7 @@ trait FindSimilarUsernames
     private function searchUsingRegexp($username)
     {
         $column = $this->getColumn();
+
         return static::whereRaw("$column REGEXP '{$username}([0-9]*)?$'")->get();
     }
 

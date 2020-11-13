@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaylorNetwork\Tests\Environment;
-
 
 class CustomConfigUser extends TraitedUser
 {

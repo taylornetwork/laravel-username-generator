@@ -53,7 +53,7 @@ return [
     'allowed_characters' => 'a-zA-Z ',
 
     /*
-     * Prefer using REGEXP 
+     * Prefer using REGEXP
      */
     'prefer_regexp' => true,
 
