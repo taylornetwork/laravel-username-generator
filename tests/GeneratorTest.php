@@ -4,6 +4,11 @@ namespace TaylorNetwork\Tests;
 
 use Gen;
 use Orchestra\Testbench\TestCase;
+use TaylorNetwork\Tests\Environment\CustomColumnUser;
+use TaylorNetwork\Tests\Environment\CustomConfigUser;
+use TaylorNetwork\Tests\Environment\DefaultUser;
+use TaylorNetwork\Tests\Environment\TestDatabaseSeeder;
+use TaylorNetwork\Tests\Environment\TraitedUser;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
@@ -22,7 +27,22 @@ class GeneratorTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('username_generator.model', TestUser::class);
+        $app['config']->set('username_generator.model', DefaultUser::class);
+
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->loadMigrationsFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, 'Environment', 'migrations']));
+        $this->seed(TestDatabaseSeeder::class);
     }
 
     public function testDefaultConfig()
@@ -52,21 +72,21 @@ class GeneratorTest extends TestCase
     public function testGenerateForModel()
     {
         $g = new Generator();
-        $this->assertEquals('testuser1', $g->generateFor(new TestUser()));
+        $this->assertEquals('testuser1', $g->generateFor(new DefaultUser([ 'name' => 'Test User' ])));
     }
 
     public function testTrait()
     {
-        $model = new SomeUser();
+        $model = new TraitedUser([ 'name' => 'Test User']);
         $model->generateUsername();
-        $this->assertEquals('someuser1', $model->attributes['username']);
+        $this->assertEquals('testuser1', $model->getAttribute('username'));
     }
 
     public function testTraitConfig()
     {
-        $model = new CustomConfigUser();
+        $model = new CustomConfigUser([ 'name' => 'Custom Config']);
         $model->generateUsername();
-        $this->assertEquals('custom_config', $model->attributes['username']);
+        $this->assertEquals('custom_config', $model->getAttribute('username'));
     }
 
     public function testTrimOtherChars()
@@ -77,14 +97,14 @@ class GeneratorTest extends TestCase
 
     public function testUniqueMultiple()
     {
-        $model = new TestMultipleUser();
+        $model = new TraitedUser(['name' => 'Multi Test' ]);
         $model->generateUsername();
-        $this->assertEquals('testuser2', $model->attributes['username']);
+        $this->assertEquals('multitest2', $model->getAttribute('username'));
     }
 
     public function testTrimCharsWithSeparator()
     {
-        $g = new Generator(['separator' => '-', 'unique' => false]);
+        $g = new Generator(['separator' => '-']);
         $this->assertEquals('this-is-a-test-user', $g->generate('1THIS iS 1^^*A *T(E)s$t USER!***(((   '));
     }
 
@@ -112,7 +132,7 @@ class GeneratorTest extends TestCase
 
     public function testAllowExtraChars()
     {
-        $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ', 'unique' => false]);
+        $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ']);
         $this->assertEquals('use-r_test777', $generator->usingEmail()->generate('use-r_test777@example.com'));
     }
 
@@ -130,9 +150,9 @@ class GeneratorTest extends TestCase
 
     public function testCustomColumn()
     {
-        $model = new CustomColumn();
+        $model = new CustomColumnUser([ 'name' => 'Custom Column' ]);
         $model->generateUsername();
-        $this->assertEquals('custom*column*1', $model->attributes['identifier']);
+        $this->assertEquals('custom*column*1', $model->getAttribute('identifier'));
     }
 
     public function testRandom()
