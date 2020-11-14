@@ -4,6 +4,7 @@ namespace TaylorNetwork\Tests;
 
 use Gen;
 use Orchestra\Testbench\TestCase;
+use TaylorNetwork\Tests\Environment\BaseUser;
 use TaylorNetwork\Tests\Environment\CustomColumnUser;
 use TaylorNetwork\Tests\Environment\CustomConfigUser;
 use TaylorNetwork\Tests\Environment\DefaultUser;
@@ -148,15 +149,22 @@ class GeneratorTest extends TestCase
         $this->assertEquals('t', UsernameGenerator::setConfig('unique', false)->generate('T'));
     }
 
-    public function testCustomColumn()
+    public function testCustomColumnMultiple()
     {
         $model = new CustomColumnUser(['name' => 'Custom Column']);
         $model->generateUsername();
-        $this->assertEquals('custom*column*1', $model->getAttribute('identifier'));
+        $this->assertEquals('custom*column*2', $model->getAttribute('identifier'));
     }
 
     public function testRandom()
     {
         $this->assertIsString(UsernameGenerator::generate());
+    }
+
+    public function testModelEmptyName()
+    {
+        $model = new TraitedUser();
+        $model->generateUsername();
+        $this->assertIsString($model->getAttribute('username'));
     }
 }

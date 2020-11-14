@@ -53,6 +53,15 @@ return [
     'allowed_characters' => 'a-zA-Z ',
 
     /*
+     * Run the generator even if the username was provided by the user?
+     * Only used with GeneratesUsernames Trait.
+     * This would be useful to maintain congruency in usernames even
+     * if someone enters their own. If set to false, when the username
+     * field is not empty then the generator will not run.
+     */
+    'generate_entered_username' => true,
+
+    /*
      * Prefer using REGEXP
      */
     'prefer_regexp' => true,

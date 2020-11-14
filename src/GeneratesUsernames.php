@@ -27,11 +27,9 @@ trait GeneratesUsernames
         $column = $generator->getConfig('column', 'username');
 
         if (empty($this->getAttribute($column))) {
-            try {
-                $this->attributes[$column] = $generator->generate($this->getField());
-            } catch (Exception $e) {
-                // Failed but don't halt saving the model
-            }
+            $this->updateUsername($generator, $column, $this->getField());
+        } elseif ($generator->getConfig('generate_entered_username', true)) {
+            $this->updateUsername($generator, $column, $this->getAttribute($column));
         }
     }
 
@@ -42,7 +40,7 @@ trait GeneratesUsernames
      *
      * @return string|null
      */
-    public function getField()
+    public function getField(): ?string
     {
         // Support pre-v2 getName method overrides
         if (method_exists($this, 'getName')) {
@@ -67,8 +65,24 @@ trait GeneratesUsernames
      *
      * @param Generator $generator
      */
-    public function generatorConfig(&$generator): void
+    public function generatorConfig(Generator &$generator): void
     {
         // $generator->setConfig('separator', '_');
+    }
+
+    /**
+     * Attempt to update the username attribute.
+     *
+     * @param Generator $generator
+     * @param string $column
+     * @param string|null $field
+     */
+    private function updateUsername(Generator &$generator, string $column, ?string $field = null)
+    {
+        try {
+            $this->attributes[$column] = $generator->generate($field);
+        } catch (Exception $e) {
+            // Failed but don't halt saving the model
+        }
     }
 }
