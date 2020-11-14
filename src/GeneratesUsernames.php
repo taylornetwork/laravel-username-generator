@@ -73,8 +73,8 @@ trait GeneratesUsernames
     /**
      * Attempt to update the username attribute.
      *
-     * @param Generator $generator
-     * @param string $column
+     * @param Generator   $generator
+     * @param string      $column
      * @param string|null $field
      */
     private function updateUsername(Generator &$generator, string $column, ?string $field = null): void

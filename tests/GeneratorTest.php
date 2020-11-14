@@ -170,14 +170,14 @@ class GeneratorTest extends TestCase
 
     public function testGenerateForUsingEmail()
     {
-        $g = new Generator([ 'model' => EmailUser::class ]);
+        $g = new Generator(['model' => EmailUser::class]);
         $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
         $this->assertEquals('testuser2', $username);
     }
 
     public function testGenerateForUsingSetDriver()
     {
-        $g = new Generator([ 'model' => EmailUser::class ]);
+        $g = new Generator(['model' => EmailUser::class]);
         $g->setDriver('email');
         $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
         $this->assertEquals('testuser2', $username);
