@@ -77,7 +77,7 @@ trait GeneratesUsernames
      * @param string $column
      * @param string|null $field
      */
-    private function updateUsername(Generator &$generator, string $column, ?string $field = null)
+    private function updateUsername(Generator &$generator, string $column, ?string $field = null): void
     {
         try {
             $this->attributes[$column] = $generator->generate($field);

@@ -4,10 +4,10 @@ namespace TaylorNetwork\Tests;
 
 use Gen;
 use Orchestra\Testbench\TestCase;
-use TaylorNetwork\Tests\Environment\BaseUser;
 use TaylorNetwork\Tests\Environment\CustomColumnUser;
 use TaylorNetwork\Tests\Environment\CustomConfigUser;
 use TaylorNetwork\Tests\Environment\DefaultUser;
+use TaylorNetwork\Tests\Environment\EmailUser;
 use TaylorNetwork\Tests\Environment\TestDatabaseSeeder;
 use TaylorNetwork\Tests\Environment\TraitedUser;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
@@ -166,5 +166,20 @@ class GeneratorTest extends TestCase
         $model = new TraitedUser();
         $model->generateUsername();
         $this->assertIsString($model->getAttribute('username'));
+    }
+
+    public function testGenerateForUsingEmail()
+    {
+        $g = new Generator([ 'model' => EmailUser::class ]);
+        $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
+        $this->assertEquals('testuser2', $username);
+    }
+
+    public function testGenerateForUsingSetDriver()
+    {
+        $g = new Generator([ 'model' => EmailUser::class ]);
+        $g->setDriver('email');
+        $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
+        $this->assertEquals('testuser2', $username);
     }
 }

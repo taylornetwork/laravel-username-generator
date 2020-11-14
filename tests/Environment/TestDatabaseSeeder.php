@@ -21,5 +21,8 @@ class TestDatabaseSeeder extends Seeder
 
         CustomColumnUser::create(['name' => 'Custom Column']);
         CustomColumnUser::create(['name' => 'Custom Column']);
+
+        EmailUser::create(['email' => 'test_user@example.com', 'username' => 'testuser']);
+        EmailUser::create(['email' => 'test.user@example.com', 'username' => 'testuser1']);
     }
 }

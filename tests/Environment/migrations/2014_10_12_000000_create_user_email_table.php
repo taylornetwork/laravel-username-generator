@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCustomColumnTable extends Migration
+class CreateUserEmailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateCustomColumnTable extends Migration
      */
     public function up()
     {
-        Schema::create('custom_column', function (Blueprint $table) {
+        Schema::create('user_email', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->string('name');
-            $table->string('identifier')->unique()->nullable();
+            $table->string('email');
+            $table->string('username')->unique()->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCustomColumnTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('custom_column');
+        Schema::dropIfExists('user_email');
     }
 }

@@ -4,6 +4,7 @@ namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
 use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
+use TaylorNetwork\UsernameGenerator\Support\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
 class Generator
@@ -31,11 +32,11 @@ class Generator
     /**
      * Generate a username.
      *
-     * @param string $text
+     * @param string|null $text
      *
      * @return string
      */
-    public function generate(string $text = null): string
+    public function generate(?string $text = null): string
     {
         if (!isset($this->driver)) {
             $this->driver = Arr::first($this->getConfig('drivers'));
@@ -50,29 +51,27 @@ class Generator
      * @param object $model
      *
      * @return string
+     * @throws GeneratorException
      */
     public function generateFor($model): string
     {
         $drivers = $this->getConfig('drivers');
 
         if (!isset($this->driver)) {
-            foreach ($drivers as $key => $driver) {
-                if (!empty($model->$key)) {
-                    $field = $key;
-                    break;
+            foreach ($drivers as $driver) {
+                $driverInstance = new $driver;
+                $field = $driverInstance->field;
+
+                if (!empty($model->$field)) {
+                    return $driverInstance->withConfig($this->config())->generate($model->$field);
                 }
             }
-
-            if (!isset($field)) {
-                return false;
-            }
-
-            return (new $drivers[$field]())->withConfig($this->config())->generate($model->$field);
+            throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
         }
 
-        $field = array_search($this->driver, $drivers);
-
-        return (new $this->driver())->withConfig($this->config())->generate($model->$field);
+        $driverInstance = new $this->driver();
+        $field = $driverInstance->field;
+        return $driverInstance->withConfig($this->config())->generate($model->$field);
     }
 
     /**
@@ -123,11 +122,11 @@ class Generator
      * Handle __call and __callStatic.
      *
      * @param string $name
-     * @param mixed  $arguments
+     * @param mixed $arguments
      *
      * @return mixed
      */
-    private function caller($name, $arguments)
+    private function caller(string $name, $arguments)
     {
         $drivers = $this->getConfig('drivers');
 
