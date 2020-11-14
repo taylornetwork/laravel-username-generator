@@ -50,8 +50,9 @@ class Generator
      *
      * @param object $model
      *
-     * @return string
      * @throws GeneratorException
+     *
+     * @return string
      */
     public function generateFor($model): string
     {
@@ -59,18 +60,20 @@ class Generator
 
         if (!isset($this->driver)) {
             foreach ($drivers as $driver) {
-                $driverInstance = new $driver;
+                $driverInstance = new $driver();
                 $field = $driverInstance->field;
 
                 if (!empty($model->$field)) {
                     return $driverInstance->withConfig($this->config())->generate($model->$field);
                 }
             }
+
             throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
         }
 
         $driverInstance = new $this->driver();
         $field = $driverInstance->field;
+
         return $driverInstance->withConfig($this->config())->generate($model->$field);
     }
 
@@ -122,7 +125,7 @@ class Generator
      * Handle __call and __callStatic.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
      *
      * @return mixed
      */
