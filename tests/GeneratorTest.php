@@ -209,4 +209,18 @@ class GeneratorTest extends TestCase
         $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
         $this->assertEquals('testuser1', $username);
     }
+
+    public function testFieldMapExistsButNotUsed()
+    {
+        $g = new Generator([
+            'model' => DefaultUser::class,
+            'field_map' => [
+                'name' => 'fullName'
+            ]
+        ]);
+
+        $username = $g->generateFor(new DefaultUser(['name' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
+    }
 }
+
