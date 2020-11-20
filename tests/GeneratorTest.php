@@ -187,10 +187,10 @@ class GeneratorTest extends TestCase
     public function testGenerateForWithFieldMapString()
     {
         $g = new Generator([
-            'model' => CustomFieldUser::class,
+            'model'     => CustomFieldUser::class,
             'field_map' => [
-                'name' => 'fullName'
-            ]
+                'name' => 'fullName',
+            ],
         ]);
 
         $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
@@ -200,10 +200,10 @@ class GeneratorTest extends TestCase
     public function testGenerateForWithFieldMapArray()
     {
         $g = new Generator([
-            'model' => CustomFieldUser::class,
+            'model'     => CustomFieldUser::class,
             'field_map' => [
-                'name' => ['fullName']
-            ]
+                'name' => ['fullName'],
+            ],
         ]);
 
         $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));

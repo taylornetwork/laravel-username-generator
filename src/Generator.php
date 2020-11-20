@@ -50,9 +50,9 @@ class Generator
      *
      * @param object $model
      *
-     * @return string
      * @throws GeneratorException|Support\UsernameTooShortException
      *
+     * @return string
      */
     public function generateFor($model): string
     {
@@ -67,10 +67,9 @@ class Generator
                     return $this->forwardCallToDriver($driverInstance, $model->$field);
                 }
 
-                if($mappedField = $this->getMappedField($field, $model)) {
+                if ($mappedField = $this->getMappedField($field, $model)) {
                     return $this->forwardCallToDriver($driverInstance, $model->$mappedField);
                 }
-
             }
 
             throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
@@ -87,6 +86,7 @@ class Generator
      *
      * @param string $field
      * @param object $model
+     *
      * @return string|null
      */
     protected function getMappedField(string $field, $model): ?string
@@ -102,6 +102,7 @@ class Generator
                 }
             } else {
                 $mappedField = $map[$field];
+
                 return empty($model->$mappedField) ?: $mappedField;
             }
         }
@@ -113,9 +114,11 @@ class Generator
      * Forward the generate call to the selected driver.
      *
      * @param string|BaseDriver $driver
-     * @param string|null $text
-     * @return string
+     * @param string|null       $text
+     *
      * @throws Support\UsernameTooShortException
+     *
+     * @return string
      */
     protected function forwardCallToDriver($driver, ?string $text): string
     {
