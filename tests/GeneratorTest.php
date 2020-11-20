@@ -213,10 +213,10 @@ class GeneratorTest extends TestCase
     public function testFieldMapExistsButNotUsed()
     {
         $g = new Generator([
-            'model' => DefaultUser::class,
+            'model'     => DefaultUser::class,
             'field_map' => [
-                'name' => 'fullName'
-            ]
+                'name' => 'fullName',
+            ],
         ]);
 
         $username = $g->generateFor(new DefaultUser(['name' => 'Test User']));
