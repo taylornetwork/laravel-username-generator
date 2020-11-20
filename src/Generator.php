@@ -50,9 +50,9 @@ class Generator
      *
      * @param object $model
      *
-     * @throws GeneratorException
-     *
      * @return string
+     * @throws GeneratorException|Support\UsernameTooShortException
+     *
      */
     public function generateFor($model): string
     {
@@ -64,8 +64,13 @@ class Generator
                 $field = $driverInstance->field;
 
                 if (!empty($model->$field)) {
-                    return $driverInstance->withConfig($this->config())->generate($model->$field);
+                    return $this->forwardCallToDriver($driverInstance, $model->$field);
                 }
+
+                if($mappedField = $this->getMappedField($field, $model)) {
+                    return $this->forwardCallToDriver($driverInstance, $model->$mappedField);
+                }
+
             }
 
             throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
@@ -74,7 +79,51 @@ class Generator
         $driverInstance = new $this->driver();
         $field = $driverInstance->field;
 
-        return $driverInstance->withConfig($this->config())->generate($model->$field);
+        return $this->forwardCallToDriver($driverInstance, $model->$field);
+    }
+
+    /**
+     * Get the usable field on the model from the field map.
+     *
+     * @param string $field
+     * @param object $model
+     * @return string|null
+     */
+    protected function getMappedField(string $field, $model): ?string
+    {
+        $map = $this->getConfig('field_map');
+
+        if (array_key_exists($field, $map)) {
+            if (is_array($map[$field])) {
+                foreach ($map[$field] as $mappedField) {
+                    if (!empty($model->$mappedField)) {
+                        return $mappedField;
+                    }
+                }
+            } else {
+                $mappedField = $map[$field];
+                return empty($model->$mappedField) ?: $mappedField;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Forward the generate call to the selected driver.
+     *
+     * @param string|BaseDriver $driver
+     * @param string|null $text
+     * @return string
+     * @throws Support\UsernameTooShortException
+     */
+    protected function forwardCallToDriver($driver, ?string $text): string
+    {
+        if (gettype($driver) === 'string') {
+            $driver = new $driver();
+        }
+
+        return $driver->withConfig($this->config())->generate($text);
     }
 
     /**

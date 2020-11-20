@@ -67,6 +67,22 @@ return [
     'prefer_regexp' => true,
 
     /*
+     * Field Map
+     *
+     * This is really only used when using generateFor().
+     *
+     * If the default "name" field for your model is not "name" you can create a
+     * field map here. When looking for the "name" field, if not found, will check
+     * the "fullName" field. You can have the same effect by adding a "name" attribute
+     * to the model in question (ie. getNameAttribute)
+     *
+     * 'field_map' => [
+     *      'name' => 'fullName',
+     * ],
+     */
+    'field_map' => [],
+
+    /*
      * Loaded drivers for converting to a username
      */
     'drivers' => [

@@ -24,5 +24,7 @@ class TestDatabaseSeeder extends Seeder
 
         EmailUser::create(['email' => 'test_user@example.com', 'username' => 'testuser']);
         EmailUser::create(['email' => 'test.user@example.com', 'username' => 'testuser1']);
+
+        CustomFieldUser::create(['fullName' => 'Test User', 'username' => 'testuser']);
     }
 }

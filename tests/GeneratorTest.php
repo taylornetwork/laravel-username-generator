@@ -6,6 +6,7 @@ use Gen;
 use Orchestra\Testbench\TestCase;
 use TaylorNetwork\Tests\Environment\CustomColumnUser;
 use TaylorNetwork\Tests\Environment\CustomConfigUser;
+use TaylorNetwork\Tests\Environment\CustomFieldUser;
 use TaylorNetwork\Tests\Environment\DefaultUser;
 use TaylorNetwork\Tests\Environment\EmailUser;
 use TaylorNetwork\Tests\Environment\TestDatabaseSeeder;
@@ -181,5 +182,31 @@ class GeneratorTest extends TestCase
         $g->setDriver('email');
         $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
         $this->assertEquals('testuser2', $username);
+    }
+
+    public function testGenerateForWithFieldMapString()
+    {
+        $g = new Generator([
+            'model' => CustomFieldUser::class,
+            'field_map' => [
+                'name' => 'fullName'
+            ]
+        ]);
+
+        $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
+    }
+
+    public function testGenerateForWithFieldMapArray()
+    {
+        $g = new Generator([
+            'model' => CustomFieldUser::class,
+            'field_map' => [
+                'name' => ['fullName']
+            ]
+        ]);
+
+        $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
     }
 }
