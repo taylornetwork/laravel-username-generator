@@ -228,7 +228,7 @@ class GeneratorTest extends TestCase
     public function testUsernameTooLong()
     {
         $g = new Generator([
-            'max_length' => 8
+            'max_length' => 8,
         ]);
 
         $this->assertEquals('testuse', $g->generate('Test User'));
@@ -237,7 +237,7 @@ class GeneratorTest extends TestCase
     public function testUsernameTooLongException()
     {
         $g = new Generator([
-            'max_length' => 6,
+            'max_length'                  => 6,
             'throw_exception_on_too_long' => true,
         ]);
 
@@ -254,6 +254,4 @@ class GeneratorTest extends TestCase
         $this->expectException(GeneratorException::class);
         $g->generate('Test User');
     }
-
 }
-

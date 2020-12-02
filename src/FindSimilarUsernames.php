@@ -37,6 +37,7 @@ trait FindSimilarUsernames
      * Check if the username is unique as is.
      *
      * @param string $username
+     *
      * @return bool
      */
     public function isUsernameUnique(string $username): bool
@@ -48,6 +49,7 @@ trait FindSimilarUsernames
      * Search for similar usernames using LIKE.
      *
      * @param $username
+     *
      * @return mixed
      */
     private function searchUsingLike($username)
@@ -67,6 +69,7 @@ trait FindSimilarUsernames
      * This will fail on some databases, so like should be used as a backup.
      *
      * @param $username
+     *
      * @return mixed
      */
     private function searchUsingRegexp($username)

@@ -62,8 +62,9 @@ abstract class BaseDriver
      *
      * @param string|null $text
      *
-     * @return string
      * @throws UsernameTooShortException|UsernameTooLongException|GeneratorException
+     *
+     * @return string
      */
     public function generate(string $text = null): string
     {
@@ -83,7 +84,7 @@ abstract class BaseDriver
             }
         }
 
-        if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length',0) > $this->getConfig('min_length')) {
+        if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length', 0) > $this->getConfig('min_length')) {
             if (strlen($text) > $this->getConfig('max_length', 0)) {
                 $text = $this->tooLongAction($text);
             }
@@ -118,8 +119,10 @@ abstract class BaseDriver
      * Action when username is too long.
      *
      * @param string $text
-     * @return string
+     *
      * @throws UsernameTooLongException|GeneratorException
+     *
+     * @return string
      */
     public function tooLongAction(string $text): string
     {
@@ -142,7 +145,6 @@ abstract class BaseDriver
 
         return $text;
     }
-
 
     /**
      * Convert the case of the username.
