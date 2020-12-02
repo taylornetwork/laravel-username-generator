@@ -2,8 +2,6 @@
 
 namespace TaylorNetwork\UsernameGenerator;
 
-use Illuminate\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
 
 trait FindSimilarUsernames

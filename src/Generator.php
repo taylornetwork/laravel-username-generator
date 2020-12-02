@@ -157,7 +157,7 @@ class Generator
      * __call.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
      *
      * @return mixed
      */
@@ -170,7 +170,7 @@ class Generator
      * __callStatic.
      *
      * @param string $name
-     * @param mixed $arguments
+     * @param mixed  $arguments
      *
      * @return mixed
      */
