@@ -24,6 +24,18 @@ return [
     'throw_exception_on_too_short' => false,
 
     /*
+     * The maximum length of the username.
+     *
+     * Set to 0 to not enforce
+     */
+    'max_length' => 0,
+
+    /*
+     * Want to throw a UsernameTooLong exception when too long?
+     */
+    'throw_exception_on_too_long' => false,
+
+    /*
      * Convert the case of the generated username
      *
      * One of 'lower', 'upper', or 'mixed'

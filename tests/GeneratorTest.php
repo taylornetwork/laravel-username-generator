@@ -14,6 +14,8 @@ use TaylorNetwork\Tests\Environment\TraitedUser;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
 
 class GeneratorTest extends TestCase
 {
@@ -68,7 +70,7 @@ class GeneratorTest extends TestCase
     public function testUppercaseUniqueSeparator()
     {
         $g = new Generator(['case' => 'upper', 'separator' => '_']);
-        $this->assertEquals('TEST_USER_1', $g->generate('Test User'));
+        $this->assertEquals('TEST_USER', $g->generate('Test User'));
     }
 
     public function testGenerateForModel()
@@ -222,5 +224,36 @@ class GeneratorTest extends TestCase
         $username = $g->generateFor(new DefaultUser(['name' => 'Test User']));
         $this->assertEquals('testuser1', $username);
     }
+
+    public function testUsernameTooLong()
+    {
+        $g = new Generator([
+            'max_length' => 8
+        ]);
+
+        $this->assertEquals('testuse', $g->generate('Test User'));
+    }
+
+    public function testUsernameTooLongException()
+    {
+        $g = new Generator([
+            'max_length' => 6,
+            'throw_exception_on_too_long' => true,
+        ]);
+
+        $this->expectException(UsernameTooLongException::class);
+        $g->generate('Test User');
+    }
+
+    public function testUsernameFailure()
+    {
+        $g = new Generator([
+            'max_length' => 1,
+        ]);
+
+        $this->expectException(GeneratorException::class);
+        $g->generate('Test User');
+    }
+
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace TaylorNetwork\UsernameGenerator\Support;
+namespace TaylorNetwork\UsernameGenerator\Support\Exceptions;
 
 use Exception;
 

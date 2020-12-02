@@ -3,8 +3,10 @@
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use Illuminate\Support\Str;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
-use TaylorNetwork\UsernameGenerator\Support\UsernameTooShortException;
 
 abstract class BaseDriver
 {
@@ -58,11 +60,10 @@ abstract class BaseDriver
     /**
      * Generate the username.
      *
-     * @param string $text
-     *
-     * @throws UsernameTooShortException
+     * @param string|null $text
      *
      * @return string
+     * @throws UsernameTooShortException|UsernameTooLongException|GeneratorException
      */
     public function generate(string $text = null): string
     {
@@ -79,6 +80,12 @@ abstract class BaseDriver
         if ($this->getConfig('min_length', 0) > 0) {
             if (strlen($text) < $this->getConfig('min_length')) {
                 $text = $this->tooShortAction($text);
+            }
+        }
+
+        if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length',0) > $this->getConfig('min_length')) {
+            if (strlen($text) > $this->getConfig('max_length', 0)) {
+                $text = $this->tooLongAction($text);
             }
         }
 
@@ -106,6 +113,36 @@ abstract class BaseDriver
 
         return $text;
     }
+
+    /**
+     * Action when username is too long.
+     *
+     * @param string $text
+     * @return string
+     * @throws UsernameTooLongException|GeneratorException
+     */
+    public function tooLongAction(string $text): string
+    {
+        if ($this->getConfig('throw_exception_on_too_long')) {
+            throw new UsernameTooLongException('Generated username exceeds maximum length of '.$this->getConfig('max_length'));
+        }
+
+        $lengthValue = $this->getConfig('max_length') + 1;
+
+        while (strlen($text) > $this->getConfig('max_length')) {
+            $lengthValue--;
+
+            if ($lengthValue === 0) {
+                throw new GeneratorException('Could not reduce the username to a valid length.');
+            }
+
+            $text = substr($text, 0, $lengthValue);
+            $text = $this->makeUnique($text);
+        }
+
+        return $text;
+    }
+
 
     /**
      * Convert the case of the username.
@@ -171,6 +208,10 @@ abstract class BaseDriver
     public function makeUnique(string $text): string
     {
         if ($this->getConfig('unique') && $this->model() && method_exists($this->model(), 'findSimilarUsernames')) {
+            if (method_exists($this->model(), 'isUsernameUnique') && $this->model()->isUsernameUnique($text)) {
+                return $text;
+            }
+
             if (($similar = count($this->model()->findSimilarUsernames($text))) > 0) {
                 return $text.$this->getConfig('separator').$similar;
             }

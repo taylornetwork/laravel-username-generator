@@ -19,6 +19,8 @@ class TestDatabaseSeeder extends Seeder
         BaseUser::create(['name' => 'Multi Test', 'username' => 'multitest']);
         BaseUser::create(['name' => 'Multi Test', 'username' => 'multitest1']);
 
+        BaseUser::create(['name' => 'T', 'username' => 't']);
+
         CustomColumnUser::create(['name' => 'Custom Column']);
         CustomColumnUser::create(['name' => 'Custom Column']);
 

@@ -4,7 +4,9 @@ namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
 use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
-use TaylorNetwork\UsernameGenerator\Support\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
 class Generator
@@ -50,9 +52,10 @@ class Generator
      *
      * @param object $model
      *
-     * @throws GeneratorException|Support\UsernameTooShortException
-     *
      * @return string
+     * @throws GeneratorException
+     * @throws UsernameTooLongException
+     * @throws UsernameTooShortException
      */
     public function generateFor($model): string
     {
@@ -114,11 +117,12 @@ class Generator
      * Forward the generate call to the selected driver.
      *
      * @param string|BaseDriver $driver
-     * @param string|null       $text
-     *
-     * @throws Support\UsernameTooShortException
+     * @param string|null $text
      *
      * @return string
+     * @throws GeneratorException
+     * @throws UsernameTooLongException
+     * @throws UsernameTooShortException
      */
     protected function forwardCallToDriver($driver, ?string $text): string
     {

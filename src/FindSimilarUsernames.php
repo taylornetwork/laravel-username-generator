@@ -2,6 +2,8 @@
 
 namespace TaylorNetwork\UsernameGenerator;
 
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
 
 trait FindSimilarUsernames
@@ -31,6 +33,23 @@ trait FindSimilarUsernames
         }
     }
 
+    /**
+     * Check if the username is unique as is.
+     *
+     * @param string $username
+     * @return bool
+     */
+    public function isUsernameUnique(string $username): bool
+    {
+        return static::where($this->getColumn(), $username)->get()->count() === 0;
+    }
+
+    /**
+     * Search for similar usernames using LIKE.
+     *
+     * @param $username
+     * @return mixed
+     */
     private function searchUsingLike($username)
     {
         $exactMatches = static::where($this->getColumn(), $username)->get();
@@ -42,6 +61,14 @@ trait FindSimilarUsernames
         return $exactMatches;
     }
 
+    /**
+     * Search for similar usernames using REGEXP.
+     *
+     * This will fail on some databases, so like should be used as a backup.
+     *
+     * @param $username
+     * @return mixed
+     */
     private function searchUsingRegexp($username)
     {
         $column = $this->getColumn();
@@ -49,6 +76,11 @@ trait FindSimilarUsernames
         return static::whereRaw("$column REGEXP '{$username}([0-9]*)?$'")->get();
     }
 
+    /**
+     * Get the username column.
+     *
+     * @return Repository|Application|mixed
+     */
     private function getColumn()
     {
         return $this->usernameColumn ?? config('username_generator.column', 'username');
