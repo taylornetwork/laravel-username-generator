@@ -35,7 +35,7 @@ Easily generate unique usernames for a Laravel User Model
 - Added ability for pre-filled usernames to go through generate process to allow for consistent username styles.
 - Added checking for similar usernames using REGEXP or LIKE (LIKE is a fallback if REGEXP fails).
 - Added a check if a username is unique as is before checking for similar ones.
-- Updated `composer.json` to support PHP 8.0 as well as 7.3
+- Updated `composer.json` to support PHP 7.2 and above
 - Updated readme for better Laravel 8+ quickstart
 
 **v2.4**
