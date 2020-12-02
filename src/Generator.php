@@ -52,10 +52,11 @@ class Generator
      *
      * @param object $model
      *
-     * @return string
      * @throws GeneratorException
      * @throws UsernameTooLongException
      * @throws UsernameTooShortException
+     *
+     * @return string
      */
     public function generateFor($model): string
     {
@@ -117,12 +118,13 @@ class Generator
      * Forward the generate call to the selected driver.
      *
      * @param string|BaseDriver $driver
-     * @param string|null $text
+     * @param string|null       $text
      *
-     * @return string
      * @throws GeneratorException
      * @throws UsernameTooLongException
      * @throws UsernameTooShortException
+     *
+     * @return string
      */
     protected function forwardCallToDriver($driver, ?string $text): string
     {
