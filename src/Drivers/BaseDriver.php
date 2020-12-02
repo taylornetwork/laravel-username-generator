@@ -39,6 +39,8 @@ abstract class BaseDriver
         'collapseWhitespace',
         'addSeparator',
         'makeUnique',
+        'checkMinLength',
+        'checkMaxLength',
     ];
 
     /**
@@ -62,8 +64,6 @@ abstract class BaseDriver
      *
      * @param string|null $text
      *
-     * @throws UsernameTooShortException|UsernameTooLongException|GeneratorException
-     *
      * @return string
      */
     public function generate(?string $text = null): string
@@ -78,15 +78,40 @@ abstract class BaseDriver
             $text = $this->checkForHook($text, $method);
         }
 
-        if ($this->getConfig('min_length', 0) > 0) {
-            if (strlen($text) < $this->getConfig('min_length')) {
-                $text = $this->tooShortAction($text);
-            }
-        }
+        return $text;
+    }
 
+    /**
+     * Check maximum length.
+     *
+     * @param string $text
+     * @return string
+     * @throws GeneratorException
+     * @throws UsernameTooLongException
+     */
+    public function checkMaxLength(string $text): string
+    {
         if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length', 0) > $this->getConfig('min_length')) {
             if (strlen($text) > $this->getConfig('max_length', 0)) {
                 $text = $this->tooLongAction($text);
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * Check minimum length.
+     *
+     * @param string $text
+     * @return string
+     * @throws UsernameTooShortException
+     */
+    public function checkMinLength(string $text): string
+    {
+        if ($this->getConfig('min_length', 0) > 0) {
+            if (strlen($text) < $this->getConfig('min_length')) {
+                $text = $this->tooShortAction($text);
             }
         }
 
@@ -111,6 +136,8 @@ abstract class BaseDriver
         while (strlen($text) < $this->getConfig('min_length')) {
             $text .= rand(0, 9);
         }
+
+        $text = $this->makeUnique($text);
 
         return $text;
     }
