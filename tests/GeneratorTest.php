@@ -4,9 +4,18 @@ namespace TaylorNetwork\Tests;
 
 use Gen;
 use Orchestra\Testbench\TestCase;
+use TaylorNetwork\Tests\Environment\CustomColumnUser;
+use TaylorNetwork\Tests\Environment\CustomConfigUser;
+use TaylorNetwork\Tests\Environment\CustomFieldUser;
+use TaylorNetwork\Tests\Environment\DefaultUser;
+use TaylorNetwork\Tests\Environment\EmailUser;
+use TaylorNetwork\Tests\Environment\TestDatabaseSeeder;
+use TaylorNetwork\Tests\Environment\TraitedUser;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\Generator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
 
 class GeneratorTest extends TestCase
 {
@@ -22,7 +31,22 @@ class GeneratorTest extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('username_generator.model', TestUser::class);
+        $app['config']->set('username_generator.model', DefaultUser::class);
+
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->loadMigrationsFrom(implode(DIRECTORY_SEPARATOR, [__DIR__, 'Environment', 'migrations']));
+        $this->seed(TestDatabaseSeeder::class);
     }
 
     public function testDefaultConfig()
@@ -46,27 +70,27 @@ class GeneratorTest extends TestCase
     public function testUppercaseUniqueSeparator()
     {
         $g = new Generator(['case' => 'upper', 'separator' => '_']);
-        $this->assertEquals('TEST_USER_1', $g->generate('Test User'));
+        $this->assertEquals('TEST_USER', $g->generate('Test User'));
     }
 
     public function testGenerateForModel()
     {
         $g = new Generator();
-        $this->assertEquals('testuser1', $g->generateFor(new TestUser()));
+        $this->assertEquals('testuser1', $g->generateFor(new DefaultUser(['name' => 'Test User'])));
     }
 
     public function testTrait()
     {
-        $model = new SomeUser();
+        $model = new TraitedUser(['name' => 'Test User']);
         $model->generateUsername();
-        $this->assertEquals('someuser1', $model->attributes['username']);
+        $this->assertEquals('testuser1', $model->getAttribute('username'));
     }
 
     public function testTraitConfig()
     {
-        $model = new CustomConfigUser();
+        $model = new CustomConfigUser(['name' => 'Custom Config']);
         $model->generateUsername();
-        $this->assertEquals('custom_config', $model->attributes['username']);
+        $this->assertEquals('custom_config', $model->getAttribute('username'));
     }
 
     public function testTrimOtherChars()
@@ -77,14 +101,14 @@ class GeneratorTest extends TestCase
 
     public function testUniqueMultiple()
     {
-        $model = new TestMultipleUser();
+        $model = new TraitedUser(['name' => 'Multi Test']);
         $model->generateUsername();
-        $this->assertEquals('testuser2', $model->attributes['username']);
+        $this->assertEquals('multitest2', $model->getAttribute('username'));
     }
 
     public function testTrimCharsWithSeparator()
     {
-        $g = new Generator(['separator' => '-', 'unique' => false]);
+        $g = new Generator(['separator' => '-']);
         $this->assertEquals('this-is-a-test-user', $g->generate('1THIS iS 1^^*A *T(E)s$t USER!***(((   '));
     }
 
@@ -112,7 +136,7 @@ class GeneratorTest extends TestCase
 
     public function testAllowExtraChars()
     {
-        $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ', 'unique' => false]);
+        $generator = new Generator(['allowed_characters' => 'a-zA-Z0-9_\- ']);
         $this->assertEquals('use-r_test777', $generator->usingEmail()->generate('use-r_test777@example.com'));
     }
 
@@ -128,15 +152,106 @@ class GeneratorTest extends TestCase
         $this->assertEquals('t', UsernameGenerator::setConfig('unique', false)->generate('T'));
     }
 
-    public function testCustomColumn()
+    public function testCustomColumnMultiple()
     {
-        $model = new CustomColumn();
+        $model = new CustomColumnUser(['name' => 'Custom Column']);
         $model->generateUsername();
-        $this->assertEquals('custom*column*1', $model->attributes['identifier']);
+        $this->assertEquals('custom*column*2', $model->getAttribute('identifier'));
     }
 
     public function testRandom()
     {
         $this->assertIsString(UsernameGenerator::generate());
+    }
+
+    public function testModelEmptyName()
+    {
+        $model = new TraitedUser();
+        $model->generateUsername();
+        $this->assertIsString($model->getAttribute('username'));
+    }
+
+    public function testGenerateForUsingEmail()
+    {
+        $g = new Generator(['model' => EmailUser::class]);
+        $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
+        $this->assertEquals('testuser2', $username);
+    }
+
+    public function testGenerateForUsingSetDriver()
+    {
+        $g = new Generator(['model' => EmailUser::class]);
+        $g->setDriver('email');
+        $username = $g->generateFor(new EmailUser(['email' => 'testuser@exmaple.com']));
+        $this->assertEquals('testuser2', $username);
+    }
+
+    public function testGenerateForWithFieldMapString()
+    {
+        $g = new Generator([
+            'model'     => CustomFieldUser::class,
+            'field_map' => [
+                'name' => 'fullName',
+            ],
+        ]);
+
+        $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
+    }
+
+    public function testGenerateForWithFieldMapArray()
+    {
+        $g = new Generator([
+            'model'     => CustomFieldUser::class,
+            'field_map' => [
+                'name' => ['fullName'],
+            ],
+        ]);
+
+        $username = $g->generateFor(new CustomFieldUser(['fullName' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
+    }
+
+    public function testFieldMapExistsButNotUsed()
+    {
+        $g = new Generator([
+            'model'     => DefaultUser::class,
+            'field_map' => [
+                'name' => 'fullName',
+            ],
+        ]);
+
+        $username = $g->generateFor(new DefaultUser(['name' => 'Test User']));
+        $this->assertEquals('testuser1', $username);
+    }
+
+    public function testUsernameTooLong()
+    {
+        $g = new Generator([
+            'max_length' => 8,
+        ]);
+
+        $this->assertEquals('testuse', $g->generate('Test User'));
+    }
+
+    public function testUsernameTooLongException()
+    {
+        $g = new Generator([
+            'max_length'                  => 6,
+            'throw_exception_on_too_long' => true,
+        ]);
+
+        $this->expectException(UsernameTooLongException::class);
+        $g->generate('Test User');
+    }
+
+    public function testUsernameFailure()
+    {
+        $g = new Generator([
+            'max_length' => 1,
+        ]);
+
+        $this->expectException(GeneratorException::class);
+        $g->generate('Test User');
     }
 }

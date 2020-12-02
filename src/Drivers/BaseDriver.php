@@ -3,8 +3,10 @@
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use Illuminate\Support\Str;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
+use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
-use TaylorNetwork\UsernameGenerator\Support\UsernameTooShortException;
 
 abstract class BaseDriver
 {
@@ -37,6 +39,8 @@ abstract class BaseDriver
         'collapseWhitespace',
         'addSeparator',
         'makeUnique',
+        'checkMinLength',
+        'checkMaxLength',
     ];
 
     /**
@@ -47,7 +51,7 @@ abstract class BaseDriver
         $this->loadConfig();
     }
 
-    public function getWord($type = 'noun'): string
+    public function getWord(string $type = 'noun'): string
     {
         $type = Str::plural(strtolower($type));
         $max = count($this->getConfig('dictionary')[$type]) - 1;
@@ -58,13 +62,11 @@ abstract class BaseDriver
     /**
      * Generate the username.
      *
-     * @param string $text
-     *
-     * @throws UsernameTooShortException
+     * @param string|null $text
      *
      * @return string
      */
-    public function generate(string $text = null): string
+    public function generate(?string $text = null): string
     {
         if ($text === null) {
             $text = $this->getWord('adjective').' '.$this->getWord('noun');
@@ -76,6 +78,41 @@ abstract class BaseDriver
             $text = $this->checkForHook($text, $method);
         }
 
+        return $text;
+    }
+
+    /**
+     * Check maximum length.
+     *
+     * @param string $text
+     *
+     * @throws GeneratorException
+     * @throws UsernameTooLongException
+     *
+     * @return string
+     */
+    public function checkMaxLength(string $text): string
+    {
+        if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length', 0) > $this->getConfig('min_length')) {
+            if (strlen($text) > $this->getConfig('max_length', 0)) {
+                $text = $this->tooLongAction($text);
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * Check minimum length.
+     *
+     * @param string $text
+     *
+     * @throws UsernameTooShortException
+     *
+     * @return string
+     */
+    public function checkMinLength(string $text): string
+    {
         if ($this->getConfig('min_length', 0) > 0) {
             if (strlen($text) < $this->getConfig('min_length')) {
                 $text = $this->tooShortAction($text);
@@ -102,6 +139,39 @@ abstract class BaseDriver
 
         while (strlen($text) < $this->getConfig('min_length')) {
             $text .= rand(0, 9);
+        }
+
+        $text = $this->makeUnique($text);
+
+        return $text;
+    }
+
+    /**
+     * Action when username is too long.
+     *
+     * @param string $text
+     *
+     * @throws UsernameTooLongException|GeneratorException
+     *
+     * @return string
+     */
+    public function tooLongAction(string $text): string
+    {
+        if ($this->getConfig('throw_exception_on_too_long')) {
+            throw new UsernameTooLongException('Generated username exceeds maximum length of '.$this->getConfig('max_length'));
+        }
+
+        $lengthValue = $this->getConfig('max_length') + 1;
+
+        while (strlen($text) > $this->getConfig('max_length')) {
+            $lengthValue--;
+
+            if ($lengthValue === 0) {
+                throw new GeneratorException('Could not reduce the username to a valid length.');
+            }
+
+            $text = substr($text, 0, $lengthValue);
+            $text = $this->makeUnique($text);
         }
 
         return $text;
@@ -171,6 +241,10 @@ abstract class BaseDriver
     public function makeUnique(string $text): string
     {
         if ($this->getConfig('unique') && $this->model() && method_exists($this->model(), 'findSimilarUsernames')) {
+            if (method_exists($this->model(), 'isUsernameUnique') && $this->model()->isUsernameUnique($text)) {
+                return $text;
+            }
+
             if (($similar = count($this->model()->findSimilarUsernames($text))) > 0) {
                 return $text.$this->getConfig('separator').$similar;
             }

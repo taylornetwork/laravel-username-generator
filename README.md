@@ -22,11 +22,21 @@ Easily generate unique usernames for a Laravel User Model
     - [Upper Case](#upper-case)
     - [Mixed Case](#mixed-case)
     - [Minimum Length](#minimum-length)
+    - [Maximum Length](#maximum-length)
 7. [Drivers](#drivers)
     - [Extending](#extending)
 8. [License](#license)
 
 ## Changes
+
+**v2.5**
+
+- Added maximum length check.
+- Added ability for pre-filled usernames to go through generate process to allow for consistent username styles.
+- Added checking for similar usernames using REGEXP or LIKE (LIKE is a fallback if REGEXP fails).
+- Added a check if a username is unique as is before checking for similar ones.
+- Updated `composer.json` to support PHP 7.2 and above
+- Updated readme for better Laravel 8+ quickstart
 
 **v2.4**
 
@@ -69,40 +79,102 @@ Via Composer
 $ composer require taylornetwork/laravel-username-generator
 ```
 
-## Set Up
+### Publish Config
 
-Add the `FindSimilarUsernames` trait on your user model (or whichever model you want to use).
+This will add the config to `config/username_generator.php`
 
-```php
-
-// app/User.php
-
-namespace App;
-
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
-
-class User extends Authenticatable
-{
-    use Notifiable, FindSimilarUsernames;
-
-    // --
-
-}    
-```
-
-### Laravel 7 and below
-
-If you're using Laravel 7 or below you'll need to publish the config using 
 
 ```bash
 $ php artisan vendor:publish --provider="TaylorNetwork\UsernameGenerator\ServiceProvider"
 ```
 
-And update your `config/username_generator.php` file to match your User model namespace (`App\User`).
+## Quickstart 
 
-### Use username to login
+This section will help you get up and running fast.
+
+The following steps will be the same for all Laravel versions and assumes you're adding the package to a new installation.
+
+**User Model**
+
+In `App\Models\User` (or `App\User` for Laravel 7) add the `FindSimilarUsernames` and `GeneratesUsernames` traits. 
+Add `'username'` to the fillable property.
+
+```php
+
+// ...
+use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
+use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
+
+class User extends Authenticatable
+{
+	// ...
+	use FindSimilarUsernames;
+	use GeneratesUsernames;
+	
+	protected $fillable = [
+		// ...
+		'username',
+	];
+	
+	// ...
+
+}
+```
+
+**Database Migration**
+
+In your `database/2014_10_12_000000_create_users_table` add a username column.
+
+```php
+class CreateUsersTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            // ...
+            $table->string('username')->unique();
+            // ...
+        });
+    }
+}
+```
+
+
+### Laravel 8+
+
+**Note: if you are not using Laravel Jetstream for your project, simply continue with the Laravel 7 guide below.**
+
+Publish the Laravel Fortify config if you haven't already
+
+```bash
+$ php artisan vendor:publish --tag=fortify-config
+```
+
+In the `config/fortify.php` change the `'username' => 'email'` to `'username' => 'username'`
+
+```php
+// ...
+
+'username' => 'username',
+
+'email' => 'email',
+    
+// ... 
+```
+
+Update the login view in `resources/views/auth/login.blade.php` and replace Email with Username.
+
+```html
+<x-jet-label for="email" value="{{ __('Username') }}" />
+<x-jet-input id="email" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus />
+```
+
+
+### Laravel 7 and below
+
+In `config/username_generator.php` update the User model namespace to match your project.
+
+**Using username to login**
 
 To use the username to login instead of the email you need to add the following to your `LoginController`
 
@@ -113,10 +185,26 @@ public function username()
 }
 ```
 
-See Username Customization in [Laravel Authentication Docs](https://laravel.com/docs/5.8/authentication#included-authenticating)
+
+## Set Up
+
+Add the `FindSimilarUsernames` trait on your user model (or whichever model you want to use). 
+
+```php
+use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
+
+class User extends Authenticatable
+{
+    use FindSimilarUsernames;
+}    
+```
+
+**Note: this is required in all cases if you want the username to be unique**
 
 
 ## Config
+
+**This is in the process of being updated on the wiki**
 
 By default the `Generator` class has the following configuration:
 
@@ -126,7 +214,7 @@ By default the `Generator` class has the following configuration:
 | Separator | `''` | string (should be single character) |
 | Case | `'lower'` | string (one of lower, upper, or mixed) |
 | Username DB Column | `'username'` | string |
-| Class | `'\App\User'` | string |
+| Class | `'\App\Models\User'` | string |
 
 The config is stored in `config/username_generator.php`
 
@@ -136,8 +224,6 @@ You can override config on a new instance by `new Generator([ 'unique' => false 
 
 #### generate($name)
 Create a new instance and call `generate($name)`
-
-*Note: This has replaced, the old `makeUsername` method which ~~is deprecated but still currently has support~~ no longer has support (as of v2.0)*
 
 ```php
 use TaylorNetwork\UsernameGenerator\Generator;
@@ -364,6 +450,42 @@ UsernameGenerator::generate('test');
 ```
 
 Would throw a `UsernameTooShortException`
+
+### Maximum Length
+
+If you want to enforce a maximum length for usernames generated change the `max_length` option in `config/username_generator.php` 
+
+```php
+'max_length' => 6,
+```
+
+By default if the generator generates a username more than the minimum length it will cut it to the max length value and then try to make it unique again. 
+If that becomes too long it will remove one character at a time until a unique username with the correct length has been generated.
+
+For example
+
+```php
+
+UsernameGenerator::generate('test user');
+
+'testus' 
+
+```
+
+**Alternatively you can throw an exception when the maximum length has been exceeded**
+
+In `config/username_generator.php` set
+
+```php
+'throw_exception_on_too_long' => true,
+```
+
+```php
+UsernameGenerator::generate('test user');
+```
+
+Would throw a `UsernameTooLongException`
+
 
 ## Drivers
 

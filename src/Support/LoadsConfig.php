@@ -23,16 +23,16 @@ trait LoadsConfig
     /**
      * Access an instance of the unique to model.
      *
-     * @return bool
+     * @return object|null
      */
-    public function model()
+    public function model(): ?object
     {
         try {
             $model = $this->getConfig('model');
 
             return new $model();
         } catch (Exception $exception) {
-            return false;
+            return null;
         }
     }
 
@@ -91,7 +91,7 @@ trait LoadsConfig
     /**
      * Load config from Laravel config file.
      */
-    public function loadConfig()
+    public function loadConfig(): void
     {
         try {
             $this->config = config('username_generator');
@@ -129,7 +129,7 @@ trait LoadsConfig
      *
      * @return array
      */
-    public function config()
+    public function config(): array
     {
         if (!$this->configLoaded) {
             $this->loadConfig();
@@ -156,7 +156,7 @@ trait LoadsConfig
     /**
      * Adds the the default dictionary words to the config if not set.
      */
-    private function checkForDictionary()
+    private function checkForDictionary(): void
     {
         if ($this->configLoaded) {
             $dictionary = include __DIR__.'/../config/dictionary.php';
