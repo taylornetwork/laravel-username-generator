@@ -85,9 +85,11 @@ abstract class BaseDriver
      * Check maximum length.
      *
      * @param string $text
-     * @return string
+     *
      * @throws GeneratorException
      * @throws UsernameTooLongException
+     *
+     * @return string
      */
     public function checkMaxLength(string $text): string
     {
@@ -104,8 +106,10 @@ abstract class BaseDriver
      * Check minimum length.
      *
      * @param string $text
-     * @return string
+     *
      * @throws UsernameTooShortException
+     *
+     * @return string
      */
     public function checkMinLength(string $text): string
     {
