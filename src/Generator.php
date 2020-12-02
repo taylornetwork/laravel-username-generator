@@ -5,8 +5,6 @@ namespace TaylorNetwork\UsernameGenerator;
 use Illuminate\Support\Arr;
 use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
-use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
-use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
 class Generator
