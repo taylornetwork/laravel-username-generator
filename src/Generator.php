@@ -58,7 +58,7 @@ class Generator
      *
      * @return string
      */
-    public function generateFor($model): string
+    public function generateFor(object $model): string
     {
         $drivers = $this->getConfig('drivers');
 
@@ -93,7 +93,7 @@ class Generator
      *
      * @return string|null
      */
-    protected function getMappedField(string $field, $model): ?string
+    protected function getMappedField(string $field, object $model): ?string
     {
         $map = $this->getConfig('field_map');
 
@@ -157,11 +157,11 @@ class Generator
      * __call.
      *
      * @param string $name
-     * @param mixed  $arguments
+     * @param mixed $arguments
      *
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, $arguments)
     {
         return $this->caller($name, $arguments);
     }
@@ -170,11 +170,11 @@ class Generator
      * __callStatic.
      *
      * @param string $name
-     * @param mixed  $arguments
+     * @param mixed $arguments
      *
      * @return mixed
      */
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic(string $name, $arguments)
     {
         return (new static())->caller($name, $arguments);
     }

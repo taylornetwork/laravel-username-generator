@@ -14,11 +14,11 @@ trait FindSimilarUsernames
      * This assumes you are using Eloquent with Laravel, if not, override this
      * function in your class.
      *
-     * @param $username
+     * @param string $username
      *
      * @return mixed
      */
-    public function findSimilarUsernames($username)
+    public function findSimilarUsernames(string $username)
     {
         $preferRegexp = $this->preferRegexp ?? config('username_generator.prefer_regexp', true);
 
@@ -48,11 +48,11 @@ trait FindSimilarUsernames
     /**
      * Search for similar usernames using LIKE.
      *
-     * @param $username
+     * @param string $username
      *
      * @return mixed
      */
-    private function searchUsingLike($username)
+    private function searchUsingLike(string $username)
     {
         $exactMatches = static::where($this->getColumn(), $username)->get();
 
@@ -68,11 +68,11 @@ trait FindSimilarUsernames
      *
      * This will fail on some databases, so like should be used as a backup.
      *
-     * @param $username
+     * @param string $username
      *
      * @return mixed
      */
-    private function searchUsingRegexp($username)
+    private function searchUsingRegexp(string $username)
     {
         $column = $this->getColumn();
 
@@ -82,9 +82,9 @@ trait FindSimilarUsernames
     /**
      * Get the username column.
      *
-     * @return Repository|Application|mixed
+     * @return string
      */
-    private function getColumn()
+    private function getColumn(): string
     {
         return $this->usernameColumn ?? config('username_generator.column', 'username');
     }

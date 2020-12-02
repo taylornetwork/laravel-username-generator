@@ -49,7 +49,7 @@ abstract class BaseDriver
         $this->loadConfig();
     }
 
-    public function getWord($type = 'noun'): string
+    public function getWord(string $type = 'noun'): string
     {
         $type = Str::plural(strtolower($type));
         $max = count($this->getConfig('dictionary')[$type]) - 1;
@@ -66,7 +66,7 @@ abstract class BaseDriver
      *
      * @return string
      */
-    public function generate(string $text = null): string
+    public function generate(?string $text = null): string
     {
         if ($text === null) {
             $text = $this->getWord('adjective').' '.$this->getWord('noun');
