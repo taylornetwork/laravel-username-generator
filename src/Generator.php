@@ -53,8 +53,6 @@ class Generator
      * @param object $model
      *
      * @throws GeneratorException
-     * @throws UsernameTooLongException
-     * @throws UsernameTooShortException
      *
      * @return string
      */
@@ -95,7 +93,7 @@ class Generator
      */
     protected function getMappedField(string $field, object $model): ?string
     {
-        $map = $this->getConfig('field_map');
+        $map = $this->getConfig('field_map', []);
 
         if (array_key_exists($field, $map)) {
             if (is_array($map[$field])) {
@@ -119,10 +117,6 @@ class Generator
      *
      * @param string|BaseDriver $driver
      * @param string|null       $text
-     *
-     * @throws GeneratorException
-     * @throws UsernameTooLongException
-     * @throws UsernameTooShortException
      *
      * @return string
      */
