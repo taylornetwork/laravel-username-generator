@@ -34,8 +34,8 @@ abstract class BaseDriver
      * @var array
      */
     protected $order = [
-        'convertCase',
         'stripUnwantedCharacters',
+        'convertCase',
         'collapseWhitespace',
         'addSeparator',
         'makeUnique',
@@ -186,10 +186,10 @@ abstract class BaseDriver
      */
     public function convertCase(string $text): string
     {
-        if (strtolower($this->getConfig('case')) === 'lower' || strtolower($this->getConfig('case')) === 'upper') {
-            $case = 'strto'.strtolower($this->getConfig('case'));
+        $case = strtoupper($this->getConfig('case'));
 
-            return $case($text);
+        if ($case === 'UPPER' || $case === 'LOWER') {
+            return mb_convert_case($text, constant('MB_CASE_' . $case));
         }
 
         return $text;
