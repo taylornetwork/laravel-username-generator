@@ -254,4 +254,37 @@ class GeneratorTest extends TestCase
         $this->expectException(GeneratorException::class);
         $g->generate('Test User');
     }
+
+    public function testLowerCyrillicString()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case' => 'lower',
+        ]);
+
+        $this->assertEquals('роман', $g->generate('Роман'));
+    }
+
+    public function testUpperCyrillicString()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case' => 'upper',
+        ]);
+
+        $this->assertEquals('РОМАН', $g->generate('Роман'));
+    }
+
+    public function testCyrillcMixed()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case' => 'mixed',
+        ]);
+
+        $this->assertEquals('РоманTest', $g->generate('Роман Test 1'));
+    }
 }
