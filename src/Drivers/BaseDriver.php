@@ -74,8 +74,16 @@ abstract class BaseDriver
 
         $this->original = $text;
 
+        if(method_exists($this, 'first')) {
+            $text = $this->first($text);
+        }
+
         foreach ($this->order as $method) {
             $text = $this->checkForHook($text, $method);
+        }
+
+        if(method_exists($this, 'last')) {
+            $text = $this->last($text);
         }
 
         return $text;
