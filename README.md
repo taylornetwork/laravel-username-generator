@@ -12,6 +12,7 @@ Easily generate unique usernames for a Laravel User Model
 2. [Install](#install)
 3. [Set Up](#set-up)
 4. [Config](#config)
+      - [Allowed Characters](#allowed-characters)
 5. [Basic Usage](#basic-usage)
     - [generate($name)](#generatename)
     - [generateFor($model)](#generateformodel)
@@ -226,6 +227,21 @@ By default the `Generator` class has the following configuration:
 The config is stored in `config/username_generator.php`
 
 You can override config on a new instance by `new Generator([ 'unique' => false ]);` etc.
+
+### Allowed Characters
+
+If you need to include additional characters beyond just `'A-Za-z'` you'll need to update the `allowed_characters` config option.
+
+For example
+
+```
+   'allowed_characters' => 'А-Яа-яA-Za-z',   // Would also allow Cyrillic characters
+   
+   'allowed_characters' => 'А-Яа-яA-Za-z-_' // Includes Cyrillic, Latin characters as well as '-' and '_'
+```
+
+Please note that all characters not included in this list are removed before performing any operations. 
+If you get an empty string returned double check that the characters used are included. 
 
 ## Basic Usage
 
