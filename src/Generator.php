@@ -16,7 +16,7 @@ class Generator
      *
      * @var BaseDriver
      */
-    protected $driver;
+    protected BaseDriver $driver;
 
     /**
      * Generator constructor.

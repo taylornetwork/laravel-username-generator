@@ -65,6 +65,11 @@ return [
     'allowed_characters' => 'a-zA-Z ',
 
     /*
+     * Character encoding
+     */
+    'encoding' => 'UTF-8',
+
+    /*
      * Run the generator even if the username was provided by the user?
      * Only used with GeneratesUsernames Trait.
      * This would be useful to maintain congruency in usernames even

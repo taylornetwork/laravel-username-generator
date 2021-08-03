@@ -102,7 +102,7 @@ abstract class BaseDriver
     public function checkMaxLength(string $text): string
     {
         if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length', 0) > $this->getConfig('min_length')) {
-            if (strlen($text) > $this->getConfig('max_length', 0)) {
+            if ($this->length($text) > $this->getConfig('max_length', 0)) {
                 $text = $this->tooLongAction($text);
             }
         }
@@ -122,7 +122,7 @@ abstract class BaseDriver
     public function checkMinLength(string $text): string
     {
         if ($this->getConfig('min_length', 0) > 0) {
-            if (strlen($text) < $this->getConfig('min_length')) {
+            if ($this->length($text) < $this->getConfig('min_length')) {
                 $text = $this->tooShortAction($text);
             }
         }
@@ -145,7 +145,7 @@ abstract class BaseDriver
             throw new UsernameTooShortException('Generated username does not meet minimum length of '.$this->getConfig('min_length'));
         }
 
-        while (strlen($text) < $this->getConfig('min_length')) {
+        while ($this->length($text) < $this->getConfig('min_length')) {
             $text .= rand(0, 9);
         }
 
@@ -171,14 +171,14 @@ abstract class BaseDriver
 
         $lengthValue = $this->getConfig('max_length') + 1;
 
-        while (strlen($text) > $this->getConfig('max_length')) {
+        while ($this->length($text) > $this->getConfig('max_length')) {
             $lengthValue--;
 
             if ($lengthValue === 0) {
                 throw new GeneratorException('Could not reduce the username to a valid length.');
             }
 
-            $text = substr($text, 0, $lengthValue);
+            $text = mb_substr($text, 0, $lengthValue, $this->getConfig('encoding'));
             $text = $this->makeUnique($text);
         }
 
@@ -197,7 +197,7 @@ abstract class BaseDriver
         $case = strtoupper($this->getConfig('case'));
 
         if ($case === 'UPPER' || $case === 'LOWER') {
-            return mb_convert_case($text, constant('MB_CASE_'.$case));
+            return mb_convert_case($text, constant('MB_CASE_'.$case), $this->getConfig('encoding'));
         }
 
         return $text;
@@ -294,5 +294,16 @@ abstract class BaseDriver
         }
 
         return $text;
+    }
+
+    /**
+     * Check length
+     *
+     * @param string $text
+     * @return int
+     */
+    protected function length(string $text): int
+    {
+        return mb_strlen($text, $this->getConfig('encoding'));
     }
 }
