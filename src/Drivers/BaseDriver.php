@@ -34,6 +34,7 @@ abstract class BaseDriver
      * @var array
      */
     protected $order = [
+        'toAscii',
         'stripUnwantedCharacters',
         'convertCase',
         'collapseWhitespace',
@@ -293,6 +294,14 @@ abstract class BaseDriver
             $text = $this->$hook($text);
         }
 
+        return $text;
+    }
+
+    public function toAscii(string $text): string
+    {
+        if($this->getConfig('convert_to_ascii')) {
+            return Str::ascii($text, $this->getConfig('language'));
+        }
         return $text;
     }
 

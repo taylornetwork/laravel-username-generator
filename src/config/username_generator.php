@@ -70,6 +70,18 @@ return [
     'encoding' => 'UTF-8',
 
     /*
+     * Convert all entered text to ASCII?
+     */
+    'convert_to_ascii' => true,
+
+    /*
+     * Language
+     *
+     * This is used when converting to ASCII, ignore if convert_to_ascii is false.
+     */
+    'language' => 'en',
+
+    /*
      * Run the generator even if the username was provided by the user?
      * Only used with GeneratesUsernames Trait.
      * This would be useful to maintain congruency in usernames even

@@ -261,6 +261,7 @@ class GeneratorTest extends TestCase
             'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
             'case'               => 'lower',
+            'convert_to_ascii'   => false,
         ]);
 
         $this->assertEquals('роман', $g->generate('Роман'));
@@ -272,6 +273,7 @@ class GeneratorTest extends TestCase
             'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
             'case'               => 'upper',
+            'convert_to_ascii'   => false,
         ]);
 
         $this->assertEquals('РОМАН', $g->generate('Роман'));
@@ -283,8 +285,29 @@ class GeneratorTest extends TestCase
             'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
             'case'               => 'mixed',
+            'convert_to_ascii'   => false,
         ]);
 
         $this->assertEquals('РоманTest', $g->generate('Роман Test 1'));
+    }
+
+    public function testCyrillicToAsciiMixed()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'case'   => 'mixed'
+        ]);
+
+        $this->assertEquals('Roman', $g->generate('Роман'));
+    }
+
+    public function testCyrillicToAsciiLower()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'case'   => 'lower'
+        ]);
+
+        $this->assertEquals('roman', $g->generate('Роман'));
     }
 }
