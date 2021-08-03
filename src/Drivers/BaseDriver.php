@@ -297,9 +297,10 @@ abstract class BaseDriver
     }
 
     /**
-     * Check length
+     * Check length.
      *
      * @param string $text
+     *
      * @return int
      */
     protected function length(string $text): int
