@@ -13,7 +13,7 @@ class EmailDriver extends BaseDriver
      *
      * @return string
      */
-    public function beforeConvertCase(string $text): string
+    public function first(string $text): string
     {
         return preg_replace('/(@.*)$/', '', $text);
     }
