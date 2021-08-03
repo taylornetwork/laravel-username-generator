@@ -29,6 +29,13 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
+**v2.6**
+
+- Added first and last hook for custom drivers
+- Moved the EmailDriver hook to first 
+- Convert case now happens second rather than first 
+- Generator now supports multibyte characters (Cyrillic, etc.)
+
 **v2.5**
 
 - Added maximum length check.
@@ -521,8 +528,8 @@ Drivers will perform the following operations in order:
 
 ```php
 [
-	'convertCase',                 // Converts the case of the field to the set value (upper, lower, mixed)
 	'stripUnwantedCharacters',     // Removes all unwanted characters from the text
+	'convertCase',                 // Converts the case of the field to the set value (upper, lower, mixed)
 	'collapseWhitespace',          // Collapses any whitespace to a single space
 	'addSeparator',                // Converts all spaces to separator
 	'makeUnique',                  // Makes the username unique (if set)
@@ -544,6 +551,20 @@ public function afterStripUnwantedCharacters(string $text): string
 
 	// --
 	
+}
+```
+
+Additionally if there is any operation you want to do as the very first or last thing you can use the first and last hooks.
+
+```php
+public function first(string $text): string 
+{
+    // Happens first before doing anything else
+}
+
+public function last(string $text): string 
+{
+    // Happens last just before returning
 }
 ```
 
