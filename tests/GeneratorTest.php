@@ -258,9 +258,9 @@ class GeneratorTest extends TestCase
     public function testLowerCyrillicString()
     {
         $g = new Generator([
-            'unique' => false,
+            'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
-            'case' => 'lower',
+            'case'               => 'lower',
         ]);
 
         $this->assertEquals('роман', $g->generate('Роман'));
@@ -269,9 +269,9 @@ class GeneratorTest extends TestCase
     public function testUpperCyrillicString()
     {
         $g = new Generator([
-            'unique' => false,
+            'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
-            'case' => 'upper',
+            'case'               => 'upper',
         ]);
 
         $this->assertEquals('РОМАН', $g->generate('Роман'));
@@ -280,9 +280,9 @@ class GeneratorTest extends TestCase
     public function testCyrillcMixed()
     {
         $g = new Generator([
-            'unique' => false,
+            'unique'             => false,
             'allowed_characters' => 'А-Яа-яA-Za-z',
-            'case' => 'mixed',
+            'case'               => 'mixed',
         ]);
 
         $this->assertEquals('РоманTest', $g->generate('Роман Test 1'));

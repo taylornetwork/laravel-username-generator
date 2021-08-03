@@ -74,7 +74,7 @@ abstract class BaseDriver
 
         $this->original = $text;
 
-        if(method_exists($this, 'first')) {
+        if (method_exists($this, 'first')) {
             $text = $this->first($text);
         }
 
@@ -82,7 +82,7 @@ abstract class BaseDriver
             $text = $this->checkForHook($text, $method);
         }
 
-        if(method_exists($this, 'last')) {
+        if (method_exists($this, 'last')) {
             $text = $this->last($text);
         }
 
@@ -197,7 +197,7 @@ abstract class BaseDriver
         $case = strtoupper($this->getConfig('case'));
 
         if ($case === 'UPPER' || $case === 'LOWER') {
-            return mb_convert_case($text, constant('MB_CASE_' . $case));
+            return mb_convert_case($text, constant('MB_CASE_'.$case));
         }
 
         return $text;
