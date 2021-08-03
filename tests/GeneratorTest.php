@@ -295,7 +295,7 @@ class GeneratorTest extends TestCase
     {
         $g = new Generator([
             'unique' => false,
-            'case'   => 'mixed'
+            'case'   => 'mixed',
         ]);
 
         $this->assertEquals('Roman', $g->generate('Роман'));
@@ -305,7 +305,7 @@ class GeneratorTest extends TestCase
     {
         $g = new Generator([
             'unique' => false,
-            'case'   => 'lower'
+            'case'   => 'lower',
         ]);
 
         $this->assertEquals('roman', $g->generate('Роман'));
