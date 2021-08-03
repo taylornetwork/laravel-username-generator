@@ -299,9 +299,10 @@ abstract class BaseDriver
 
     public function toAscii(string $text): string
     {
-        if($this->getConfig('convert_to_ascii')) {
+        if ($this->getConfig('convert_to_ascii')) {
             return Str::ascii($text, $this->getConfig('language'));
         }
+
         return $text;
     }
 
