@@ -29,6 +29,10 @@ Easily generate unique usernames for a Laravel User Model
 
 ## Changes
 
+**v2.5.1**
+
+- Fixes issue where custom dictionary nouns and adjectives were not being used
+
 **v2.5**
 
 - Added maximum length check.
