@@ -161,11 +161,11 @@ trait LoadsConfig
         if ($this->configLoaded) {
             $dictionary = include __DIR__.'/../config/dictionary.php';
 
-            if (empty($this->config->dictionary['adjectives'])) {
+            if (empty($this->config['dictionary']['adjectives'])) {
                 $this->config['dictionary']['adjectives'] = $dictionary['adjectives'];
             }
 
-            if (empty($this->config->dictionary['nouns'])) {
+            if (empty($this->config['dictionary']['nouns'])) {
                 $this->config['dictionary']['nouns'] = $dictionary['nouns'];
             }
         }

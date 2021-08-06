@@ -37,6 +37,10 @@ Easily generate unique usernames for a Laravel User Model
 - Convert case now happens second rather than first 
 - Generator now supports multibyte characters (Cyrillic, etc.)
 
+**v2.5.1**
+
+- Fixes issue where custom dictionary nouns and adjectives were not being used
+
 **v2.5**
 
 - Added maximum length check.
