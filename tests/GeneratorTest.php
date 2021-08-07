@@ -364,4 +364,18 @@ class GeneratorTest extends TestCase
 
         $this->assertEquals('ЗАРЕГИСТРИРУЙТЕСЬ_СЕЙЧАС_НА_ДЕСЯТУЮ_МЕЖДУНАРОДНУЮ_КОНФЕРЕНЦИЮ_ПО', $g->generate('Зарегистрируйтесь сейчас на Десятую Международную Конференцию по'));
     }
+
+    public function testCustomDictionary()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'case' => 'title',
+            'dictionary' => [
+                'adjectives' => ['simple'],
+                'nouns' => ['test'],
+            ],
+        ]);
+
+        $this->assertEquals('SimpleTest', $g->generate());
+    }
 }
