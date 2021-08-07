@@ -24,6 +24,7 @@ Easily generate unique usernames for a Laravel User Model
     - [Mixed Case](#mixed-case)
     - [Minimum Length](#minimum-length)
     - [Maximum Length](#maximum-length)
+    - [Other Character Sets](#other-character-sets)
 7. [Drivers](#drivers)
     - [Extending](#extending)
 8. [License](#license)
@@ -36,6 +37,8 @@ Easily generate unique usernames for a Laravel User Model
 - Moved the EmailDriver hook to first 
 - Convert case now happens second rather than first 
 - Generator now supports multibyte characters (Cyrillic, etc.)
+- Text will automatically be converted to ASCII by default
+- Added options for converting to ascii and validating the input string
 
 **v2.5.1**
 
@@ -218,6 +221,8 @@ class User extends Authenticatable
 
 **This is in the process of being updated on the wiki**
 
+See the [default config](https://github.com/taylornetwork/laravel-username-generator/blob/master/src/config/username_generator.php)
+
 By default the `Generator` class has the following configuration:
 
 | Config | Value | Type |
@@ -236,12 +241,16 @@ You can override config on a new instance by `new Generator([ 'unique' => false 
 
 If you need to include additional characters beyond just `'A-Za-z'` you'll need to update the `allowed_characters` config option.
 
+You should also update `'convert_to_ascii'` to `false` if you want the result to be in the same set.
+
 For example
 
 ```
    'allowed_characters' => 'А-Яа-яA-Za-z',   // Would also allow Cyrillic characters
    
    'allowed_characters' => 'А-Яа-яA-Za-z-_' // Includes Cyrillic, Latin characters as well as '-' and '_'
+   
+   'allowed_characters' => '\p{Cryillic}\p{Greek}\p{Latin}\s ' // Includes cryillic, greek and latin sets and all spaces
 ```
 
 Please note that all characters not included in this list are removed before performing any operations. 
@@ -513,6 +522,26 @@ UsernameGenerator::generate('test user');
 
 Would throw a `UsernameTooLongException`
 
+### Other Character Sets
+
+Any other character set can be used if it's encoded with UTF-8. You can either include by adding the set to the `'allowed_characters'` option.
+
+Alternatively you can set `'validate_characters'` to `false` to not check.
+
+**You will need to set `'convert_to_ascii'` to `false` either way**
+
+```php
+$generator = new Generator([
+    'allowed_characters' => '\p{Greek}\p{Latin}\s ',
+    'convert_to_ascii' => false,
+]);
+
+$generator->generate('Αυτό είναι ένα τεστ');
+
+// Returns
+
+'αυτόείναιένατεστ'
+```
 
 ## Drivers
 
