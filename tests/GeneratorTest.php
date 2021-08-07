@@ -359,9 +359,9 @@ class GeneratorTest extends TestCase
             'case'               => 'upper',
             'convert_to_ascii'   => false,
             'allowed_characters' => '\p{Cyrillic}\p{Latin}\s',
-            'separator'          => '-',
+            'separator'          => '_',
         ]);
 
-        $this->assertEquals('ЗАРЕГИСТРИРУЙТЕСЬ-СЕЙЧАС-НА-ДЕСЯТУЮ-МЕЖДУНАРОДНУЮ-КОНФЕРЕНЦИЮ-ПО', $g->generate('Зарегистрируйтесь сейчас на Десятую Международную Конференцию по'));
+        $this->assertEquals('ЗАРЕГИСТРИРУЙТЕСЬ_СЕЙЧАС_НА_ДЕСЯТУЮ_МЕЖДУНАРОДНУЮ_КОНФЕРЕНЦИЮ_ПО', $g->generate('Зарегистрируйтесь сейчас на Десятую Международную Конференцию по'));
     }
 }
