@@ -358,7 +358,7 @@ class GeneratorTest extends TestCase
             'unique'             => false,
             'case'               => 'upper',
             'convert_to_ascii'   => false,
-            'allowed_characters' => '\p{Cyrillic}\p{Latin}\s',
+            'allowed_characters' => '\p{Cyrillic}\p{Latin}\s ',
             'separator'          => '_',
         ]);
 

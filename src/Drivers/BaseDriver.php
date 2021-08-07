@@ -292,7 +292,6 @@ abstract class BaseDriver
         }
 
         $text = $this->$next($text);
-//        dump($text);
 
         if (method_exists($this, 'after'.ucwords($next))) {
             $hook = 'after'.ucwords($next);
