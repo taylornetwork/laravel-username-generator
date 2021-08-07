@@ -368,11 +368,11 @@ class GeneratorTest extends TestCase
     public function testCustomDictionary()
     {
         $g = new Generator([
-            'unique' => false,
-            'case' => 'title',
+            'unique'     => false,
+            'case'       => 'title',
             'dictionary' => [
                 'adjectives' => ['simple'],
-                'nouns' => ['test'],
+                'nouns'      => ['test'],
             ],
         ]);
 
