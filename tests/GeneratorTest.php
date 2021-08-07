@@ -351,4 +351,17 @@ class GeneratorTest extends TestCase
         ]);
         $this->assertEquals('σὲ-γνωρίζω-ἀπὸ-τὴν-κόψη', $g->generate('Σὲ γνωρίζω ἀπὸ τὴν κόψη'));
     }
+
+    public function testCyrillicProperty()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'case'               => 'upper',
+            'convert_to_ascii'   => false,
+            'allowed_characters' => '\p{Cyrillic}\p{Latin}\s',
+            'separator'          => '-',
+        ]);
+
+        $this->assertEquals('ЗАРЕГИСТРИРУЙТЕСЬ-СЕЙЧАС-НА-ДЕСЯТУЮ-МЕЖДУНАРОДНУЮ-КОНФЕРЕНЦИЮ-ПО', $g->generate('Зарегистрируйтесь сейчас на Десятую Международную Конференцию по'));
+    }
 }

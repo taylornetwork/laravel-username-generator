@@ -68,8 +68,12 @@ return [
 
     /*
      * Allowed characters from the original unconverted text
+     *
+     * You can add additional character sets here or by property
+     * '\p{Cryillic}\p{Latin}\s' would allow cryillic and latin characters
+     *
      */
-    'allowed_characters' => 'a-zA-Z ',
+    'allowed_characters' => 'a-zA-Z\s',
 
     /*
      * Character encoding
