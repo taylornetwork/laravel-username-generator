@@ -314,7 +314,7 @@ class GeneratorTest extends TestCase
     public function testTitleCase()
     {
         $g = new Generator([
-            'case' => 'title'
+            'case' => 'title',
         ]);
 
         $this->assertEquals('TestUser', $g->generate('test user'));
@@ -323,7 +323,7 @@ class GeneratorTest extends TestCase
     public function testUcfirstCase()
     {
         $g = new Generator([
-            'case' => 'ucfirst'
+            'case' => 'ucfirst',
         ]);
 
         $this->assertEquals('Testuser', $g->generate('test user'));
@@ -332,10 +332,10 @@ class GeneratorTest extends TestCase
     public function testGreek()
     {
         $g = new Generator([
-            'unique' => false,
-            'case' => 'mixed',
-            'convert_to_ascii' => false,
-            'allowed_characters' => '\p{Greek}A-Za-z '
+            'unique'             => false,
+            'case'               => 'mixed',
+            'convert_to_ascii'   => false,
+            'allowed_characters' => '\p{Greek}A-Za-z ',
         ]);
         $this->assertEquals('Σὲγνωρίζωἀπὸτὴνκόψη', $g->generate('Σὲ γνωρίζω ἀπὸ τὴν κόψη'));
     }
@@ -343,11 +343,11 @@ class GeneratorTest extends TestCase
     public function testGreekToLowerWithSeparator()
     {
         $g = new Generator([
-            'unique' => false,
-            'case' => 'lower',
-            'convert_to_ascii' => false,
+            'unique'             => false,
+            'case'               => 'lower',
+            'convert_to_ascii'   => false,
             'allowed_characters' => '\p{Greek}A-Za-z ',
-            'separator' => '-',
+            'separator'          => '-',
         ]);
         $this->assertEquals('σὲ-γνωρίζω-ἀπὸ-τὴν-κόψη', $g->generate('Σὲ γνωρίζω ἀπὸ τὴν κόψη'));
     }

@@ -199,7 +199,7 @@ abstract class BaseDriver
 
         try {
             return Str::$case($text);
-        } catch(\BadMethodCallException $e) {
+        } catch (\BadMethodCallException $e) {
             return $text;
         }
     }
@@ -213,9 +213,10 @@ abstract class BaseDriver
      */
     public function stripUnwantedCharacters(string $text): string
     {
-        if($this->getConfig('validate_characters')) {
+        if ($this->getConfig('validate_characters')) {
             return preg_replace('/[^'.$this->getConfig('allowed_characters').']/u', '', $text);
         }
+
         return $text;
     }
 
