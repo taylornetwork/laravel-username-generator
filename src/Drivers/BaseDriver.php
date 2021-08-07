@@ -195,13 +195,13 @@ abstract class BaseDriver
      */
     public function convertCase(string $text): string
     {
-        $case = strtoupper($this->getConfig('case'));
+        $case = strtolower($this->getConfig('case'));
 
-        if ($case === 'UPPER' || $case === 'LOWER') {
-            return mb_convert_case($text, constant('MB_CASE_'.$case), $this->getConfig('encoding'));
+        try {
+            return Str::$case($text);
+        } catch(\BadMethodCallException $e) {
+            return $text;
         }
-
-        return $text;
     }
 
     /**
@@ -213,7 +213,10 @@ abstract class BaseDriver
      */
     public function stripUnwantedCharacters(string $text): string
     {
-        return preg_replace('/[^'.$this->getConfig('allowed_characters').']/', '', $text);
+        if($this->getConfig('validate_characters')) {
+            return preg_replace('/[^'.$this->getConfig('allowed_characters').']/u', '', $text);
+        }
+        return $text;
     }
 
     /**
@@ -288,6 +291,7 @@ abstract class BaseDriver
         }
 
         $text = $this->$next($text);
+//        dump($text);
 
         if (method_exists($this, 'after'.ucwords($next))) {
             $hook = 'after'.ucwords($next);

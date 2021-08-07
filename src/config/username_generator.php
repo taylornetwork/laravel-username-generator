@@ -38,7 +38,9 @@ return [
     /*
      * Convert the case of the generated username
      *
-     * One of 'lower', 'upper', or 'mixed'
+     * Any of the string case functions from Illuminate\Support\Str
+     *
+     * 'lower', 'upper', 'title', 'ucfirst' or 'mixed' to ignore
      */
     'case' => 'lower',
 
@@ -58,6 +60,11 @@ return [
      * Database field to check and store username
      */
     'column' => 'username',
+
+    /*
+     * Validate characters using RegEx
+     */
+    'validate_characters' => true,
 
     /*
      * Allowed characters from the original unconverted text
