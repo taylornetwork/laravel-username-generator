@@ -38,7 +38,9 @@ return [
     /*
      * Convert the case of the generated username
      *
-     * One of 'lower', 'upper', or 'mixed'
+     * Any of the string case functions from Illuminate\Support\Str
+     *
+     * 'lower', 'upper', 'title', 'ucfirst' or 'mixed' to ignore
      */
     'case' => 'lower',
 
@@ -60,9 +62,35 @@ return [
     'column' => 'username',
 
     /*
-     * Allowed characters from the original unconverted text
+     * Validate characters using RegEx
      */
-    'allowed_characters' => 'a-zA-Z ',
+    'validate_characters' => true,
+
+    /*
+     * Allowed characters from the original unconverted text
+     *
+     * You can add additional character sets here or by property
+     * '\p{Cryillic}\p{Latin}\s ' would allow cryillic and latin characters
+     *
+     */
+    'allowed_characters' => 'a-zA-Z\s ',
+
+    /*
+     * Character encoding
+     */
+    'encoding' => 'UTF-8',
+
+    /*
+     * Convert all entered text to ASCII?
+     */
+    'convert_to_ascii' => true,
+
+    /*
+     * Language
+     *
+     * This is used when converting to ASCII, ignore if convert_to_ascii is false.
+     */
+    'language' => 'en',
 
     /*
      * Run the generator even if the username was provided by the user?

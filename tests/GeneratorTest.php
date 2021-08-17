@@ -254,4 +254,128 @@ class GeneratorTest extends TestCase
         $this->expectException(GeneratorException::class);
         $g->generate('Test User');
     }
+
+    public function testLowerCyrillicString()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case'               => 'lower',
+            'convert_to_ascii'   => false,
+        ]);
+
+        $this->assertEquals('роман', $g->generate('Роман'));
+    }
+
+    public function testUpperCyrillicString()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case'               => 'upper',
+            'convert_to_ascii'   => false,
+        ]);
+
+        $this->assertEquals('РОМАН', $g->generate('Роман'));
+    }
+
+    public function testCyrillcMixed()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'allowed_characters' => 'А-Яа-яA-Za-z',
+            'case'               => 'mixed',
+            'convert_to_ascii'   => false,
+        ]);
+
+        $this->assertEquals('РоманTest', $g->generate('Роман Test 1'));
+    }
+
+    public function testCyrillicToAsciiMixed()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'case'   => 'mixed',
+        ]);
+
+        $this->assertEquals('Roman', $g->generate('Роман'));
+    }
+
+    public function testCyrillicToAsciiLower()
+    {
+        $g = new Generator([
+            'unique' => false,
+            'case'   => 'lower',
+        ]);
+
+        $this->assertEquals('roman', $g->generate('Роман'));
+    }
+
+    public function testTitleCase()
+    {
+        $g = new Generator([
+            'case' => 'title',
+        ]);
+
+        $this->assertEquals('TestUser', $g->generate('test user'));
+    }
+
+    public function testUcfirstCase()
+    {
+        $g = new Generator([
+            'case' => 'ucfirst',
+        ]);
+
+        $this->assertEquals('Testuser', $g->generate('test user'));
+    }
+
+    public function testGreek()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'case'               => 'mixed',
+            'convert_to_ascii'   => false,
+            'allowed_characters' => '\p{Greek}A-Za-z ',
+        ]);
+        $this->assertEquals('Σὲγνωρίζωἀπὸτὴνκόψη', $g->generate('Σὲ γνωρίζω ἀπὸ τὴν κόψη'));
+    }
+
+    public function testGreekToLowerWithSeparator()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'case'               => 'lower',
+            'convert_to_ascii'   => false,
+            'allowed_characters' => '\p{Greek}A-Za-z ',
+            'separator'          => '-',
+        ]);
+        $this->assertEquals('σὲ-γνωρίζω-ἀπὸ-τὴν-κόψη', $g->generate('Σὲ γνωρίζω ἀπὸ τὴν κόψη'));
+    }
+
+    public function testCyrillicProperty()
+    {
+        $g = new Generator([
+            'unique'             => false,
+            'case'               => 'upper',
+            'convert_to_ascii'   => false,
+            'allowed_characters' => '\p{Cyrillic}\p{Latin}\s ',
+            'separator'          => '_',
+        ]);
+
+        $this->assertEquals('ЗАРЕГИСТРИРУЙТЕСЬ_СЕЙЧАС_НА_ДЕСЯТУЮ_МЕЖДУНАРОДНУЮ_КОНФЕРЕНЦИЮ_ПО', $g->generate('Зарегистрируйтесь сейчас на Десятую Международную Конференцию по'));
+    }
+
+    public function testCustomDictionary()
+    {
+        $g = new Generator([
+            'unique'     => false,
+            'case'       => 'title',
+            'dictionary' => [
+                'adjectives' => ['simple'],
+                'nouns'      => ['test'],
+            ],
+        ]);
+
+        $this->assertEquals('SimpleTest', $g->generate());
+    }
 }

@@ -12,6 +12,7 @@ Easily generate unique usernames for a Laravel User Model
 2. [Install](#install)
 3. [Set Up](#set-up)
 4. [Config](#config)
+      - [Allowed Characters](#allowed-characters)
 5. [Basic Usage](#basic-usage)
     - [generate($name)](#generatename)
     - [generateFor($model)](#generateformodel)
@@ -23,11 +24,21 @@ Easily generate unique usernames for a Laravel User Model
     - [Mixed Case](#mixed-case)
     - [Minimum Length](#minimum-length)
     - [Maximum Length](#maximum-length)
+    - [Other Character Sets](#other-character-sets)
 7. [Drivers](#drivers)
     - [Extending](#extending)
 8. [License](#license)
 
 ## Changes
+
+**v2.6**
+
+- Added first and last hook for custom drivers
+- Moved the EmailDriver hook to first 
+- Convert case now happens second rather than first 
+- Generator now supports multibyte characters (Cyrillic, etc.)
+- Text will automatically be converted to ASCII by default
+- Added options for converting to ascii and validating the input string
 
 **v2.5.1**
 
@@ -210,6 +221,8 @@ class User extends Authenticatable
 
 **This is in the process of being updated on the wiki**
 
+See the [default config](https://github.com/taylornetwork/laravel-username-generator/blob/master/src/config/username_generator.php)
+
 By default the `Generator` class has the following configuration:
 
 | Config | Value | Type |
@@ -223,6 +236,25 @@ By default the `Generator` class has the following configuration:
 The config is stored in `config/username_generator.php`
 
 You can override config on a new instance by `new Generator([ 'unique' => false ]);` etc.
+
+### Allowed Characters
+
+If you need to include additional characters beyond just `'A-Za-z'` you'll need to update the `allowed_characters` config option.
+
+You should also update `'convert_to_ascii'` to `false` if you want the result to be in the same set.
+
+For example
+
+```
+   'allowed_characters' => 'А-Яа-яA-Za-z',   // Would also allow Cyrillic characters
+   
+   'allowed_characters' => 'А-Яа-яA-Za-z-_' // Includes Cyrillic, Latin characters as well as '-' and '_'
+   
+   'allowed_characters' => '\p{Cryillic}\p{Greek}\p{Latin}\s ' // Includes cryillic, greek and latin sets and all spaces
+```
+
+Please note that all characters not included in this list are removed before performing any operations. 
+If you get an empty string returned double check that the characters used are included. 
 
 ## Basic Usage
 
@@ -490,6 +522,26 @@ UsernameGenerator::generate('test user');
 
 Would throw a `UsernameTooLongException`
 
+### Other Character Sets
+
+Any other character set can be used if it's encoded with UTF-8. You can either include by adding the set to the `'allowed_characters'` option.
+
+Alternatively you can set `'validate_characters'` to `false` to not check.
+
+**You will need to set `'convert_to_ascii'` to `false` either way**
+
+```php
+$generator = new Generator([
+    'allowed_characters' => '\p{Greek}\p{Latin}\s ',
+    'convert_to_ascii' => false,
+]);
+
+$generator->generate('Αυτό είναι ένα τεστ');
+
+// Returns
+
+'αυτόείναιένατεστ'
+```
 
 ## Drivers
 
@@ -525,8 +577,8 @@ Drivers will perform the following operations in order:
 
 ```php
 [
-	'convertCase',                 // Converts the case of the field to the set value (upper, lower, mixed)
 	'stripUnwantedCharacters',     // Removes all unwanted characters from the text
+	'convertCase',                 // Converts the case of the field to the set value (upper, lower, mixed)
 	'collapseWhitespace',          // Collapses any whitespace to a single space
 	'addSeparator',                // Converts all spaces to separator
 	'makeUnique',                  // Makes the username unique (if set)
@@ -548,6 +600,20 @@ public function afterStripUnwantedCharacters(string $text): string
 
 	// --
 	
+}
+```
+
+Additionally if there is any operation you want to do as the very first or last thing you can use the first and last hooks.
+
+```php
+public function first(string $text): string 
+{
+    // Happens first before doing anything else
+}
+
+public function last(string $text): string 
+{
+    // Happens last just before returning
 }
 ```
 

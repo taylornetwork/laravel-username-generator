@@ -2,7 +2,8 @@
     "name": "taylornetwork/laravel-username-generator",
     "require": {
         "illuminate/support": ">=5.5",
-        "php": "^7.2|^7.3|^7.4|^8.0"
+        "php": "^7.2|^7.3|^7.4|^8.0",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "orchestra/testbench": "^3.5",

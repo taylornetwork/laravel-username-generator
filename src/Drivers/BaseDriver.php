@@ -34,8 +34,9 @@ abstract class BaseDriver
      * @var array
      */
     protected $order = [
-        'convertCase',
+        'toAscii',
         'stripUnwantedCharacters',
+        'convertCase',
         'collapseWhitespace',
         'addSeparator',
         'makeUnique',
@@ -74,8 +75,16 @@ abstract class BaseDriver
 
         $this->original = $text;
 
+        if (method_exists($this, 'first')) {
+            $text = $this->first($text);
+        }
+
         foreach ($this->order as $method) {
             $text = $this->checkForHook($text, $method);
+        }
+
+        if (method_exists($this, 'last')) {
+            $text = $this->last($text);
         }
 
         return $text;
@@ -94,7 +103,7 @@ abstract class BaseDriver
     public function checkMaxLength(string $text): string
     {
         if ($this->getConfig('max_length', 0) > 0 && $this->getConfig('max_length', 0) > $this->getConfig('min_length')) {
-            if (strlen($text) > $this->getConfig('max_length', 0)) {
+            if ($this->length($text) > $this->getConfig('max_length', 0)) {
                 $text = $this->tooLongAction($text);
             }
         }
@@ -114,7 +123,7 @@ abstract class BaseDriver
     public function checkMinLength(string $text): string
     {
         if ($this->getConfig('min_length', 0) > 0) {
-            if (strlen($text) < $this->getConfig('min_length')) {
+            if ($this->length($text) < $this->getConfig('min_length')) {
                 $text = $this->tooShortAction($text);
             }
         }
@@ -137,7 +146,7 @@ abstract class BaseDriver
             throw new UsernameTooShortException('Generated username does not meet minimum length of '.$this->getConfig('min_length'));
         }
 
-        while (strlen($text) < $this->getConfig('min_length')) {
+        while ($this->length($text) < $this->getConfig('min_length')) {
             $text .= rand(0, 9);
         }
 
@@ -163,14 +172,14 @@ abstract class BaseDriver
 
         $lengthValue = $this->getConfig('max_length') + 1;
 
-        while (strlen($text) > $this->getConfig('max_length')) {
+        while ($this->length($text) > $this->getConfig('max_length')) {
             $lengthValue--;
 
             if ($lengthValue === 0) {
                 throw new GeneratorException('Could not reduce the username to a valid length.');
             }
 
-            $text = substr($text, 0, $lengthValue);
+            $text = mb_substr($text, 0, $lengthValue, $this->getConfig('encoding'));
             $text = $this->makeUnique($text);
         }
 
@@ -186,13 +195,13 @@ abstract class BaseDriver
      */
     public function convertCase(string $text): string
     {
-        if (strtolower($this->getConfig('case')) === 'lower' || strtolower($this->getConfig('case')) === 'upper') {
-            $case = 'strto'.strtolower($this->getConfig('case'));
+        $case = strtolower($this->getConfig('case'));
 
-            return $case($text);
+        try {
+            return Str::$case($text);
+        } catch (\BadMethodCallException $e) {
+            return $text;
         }
-
-        return $text;
     }
 
     /**
@@ -204,7 +213,11 @@ abstract class BaseDriver
      */
     public function stripUnwantedCharacters(string $text): string
     {
-        return preg_replace('/[^'.$this->getConfig('allowed_characters').']/', '', $text);
+        if ($this->getConfig('validate_characters')) {
+            return preg_replace('/[^'.$this->getConfig('allowed_characters').']/u', '', $text);
+        }
+
+        return $text;
     }
 
     /**
@@ -286,5 +299,26 @@ abstract class BaseDriver
         }
 
         return $text;
+    }
+
+    public function toAscii(string $text): string
+    {
+        if ($this->getConfig('convert_to_ascii')) {
+            return Str::ascii($text, $this->getConfig('language'));
+        }
+
+        return $text;
+    }
+
+    /**
+     * Check length.
+     *
+     * @param string $text
+     *
+     * @return int
+     */
+    protected function length(string $text): int
+    {
+        return mb_strlen($text, $this->getConfig('encoding'));
     }
 }
