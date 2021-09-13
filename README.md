@@ -419,6 +419,25 @@ Returns
 SOMEUSER
 ```
 
+### Additional Casing Options
+
+To change the casing, we make use of the [Laravel String Helpers](https://laravel.com/docs/master/helpers#strings-method-list) so any value that changes the case will work.
+
+**Studly (Pascal)**
+
+```php
+UsernameGenerator::setConfig([ 'case' => 'studly' ])->generate('test user');
+// Returns 'TestUser'
+```
+
+**Ucfirst**
+
+
+```php
+UsernameGenerator::setConfig([ 'case' => 'ucfirst' ])->generate('test user');
+// Returns 'Testuser'
+```
+
 ### Mixed Case
 
 ```php
