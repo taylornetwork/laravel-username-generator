@@ -21,6 +21,7 @@ Easily generate unique usernames for a Laravel User Model
 6. [Other Examples](#other-examples)
     - [With a Separator](#with-a-separator)
     - [Upper Case](#upper-case)
+    - [Additional Casing Options](#additional-casing-options)
     - [Mixed Case](#mixed-case)
     - [Minimum Length](#minimum-length)
     - [Maximum Length](#maximum-length)
@@ -428,6 +429,26 @@ To change the casing, we make use of the [Laravel String Helpers](https://larave
 ```php
 UsernameGenerator::setConfig([ 'case' => 'studly' ])->generate('test user');
 // Returns 'TestUser'
+```
+
+When using studly case the laravel helper will remove the spaces between separate words so if a separator is used it will be overridden. 
+You would need to use title case (seen below) in order to have the same effect.
+
+```php
+UsernameGenerator::setConfig([ 'case' => 'studly', 'separator' => '_' ])->generate('test user');
+// Returns 'TestUser'
+```
+
+**Title**
+
+This is the same as studly but the laravel helper will not remove spaces, so it can be used in conjunction with a separator
+
+```php
+UsernameGenerator::setConfig([ 'case' => 'title' ])->generate('test user');
+// Returns 'TestUser'
+
+UsernameGenerator::setConfig([ 'case' => 'title', 'separator' => '_' ])->generate('test user');
+// Returns 'Test_User'
 ```
 
 **Ucfirst**
