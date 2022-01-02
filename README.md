@@ -8,7 +8,7 @@
 
 Easily generate unique usernames for a Laravel User Model
 
-1. [Changes](#changes)
+1. [Most Recent Update](#most-recent-update)
 2. [Install](#install)
 3. [Set Up](#set-up)
 4. [Config](#config)
@@ -29,62 +29,18 @@ Easily generate unique usernames for a Laravel User Model
 7. [Drivers](#drivers)
     - [Extending](#extending)
 8. [License](#license)
+9. [Change Log](#change-log)
 
-## Changes
 
-**v2.6**
+## Most Recent Update
 
-- Added first and last hook for custom drivers
-- Moved the EmailDriver hook to first 
-- Convert case now happens second rather than first 
-- Generator now supports multibyte characters (Cyrillic, etc.)
-- Text will automatically be converted to ASCII by default
-- Added options for converting to ascii and validating the input string
+**v2.6.1**
 
-**v2.5.1**
+- Added support for PHP 8.1
+- Set minimum PHP version to 7.4
 
-- Fixes issue where custom dictionary nouns and adjectives were not being used
+*Updated January 2, 2022*
 
-**v2.5**
-
-- Added maximum length check.
-- Added ability for pre-filled usernames to go through generate process to allow for consistent username styles.
-- Added checking for similar usernames using REGEXP or LIKE (LIKE is a fallback if REGEXP fails).
-- Added a check if a username is unique as is before checking for similar ones.
-- Updated `composer.json` to support PHP 7.2 and above
-- Updated readme for better Laravel 8+ quickstart
-
-**v2.4**
-
-- This is a minor change but if you're using older versions of Laravel you may need to update your config file.
-- Changed default User model from `App\User` to `App\Models\User` to mirror new Laravel versions (8.0+).
-- Moved the adjective and noun word lists from the config file to a separate file, making the published config smaller and allowing you to create your own word lists if you wish.
-
-**v2.3**
-
-- Added support for random dictionary based usernames if a name is not provided. See the [generate](#generatename) method
-
-**v2.2.2**
-
-- Fixed bug where if a custom column name was used and set using `generatorConfig` it was not being passed through.
-- Fixed support for overriding the `getName` method from `GeneratesUsernames`
-
-**v2.2**
-
-- Added support for minimum length
-
-**v2.1**
-
-- Switched to a driver based conversion
-- Added email support
-
-*Note: Nothing should break with this update but let me know if you have any issues.*
-
-**v2.0**
-
-- Removed support for deprecated `makeUsername` method
-- `Generator` will now only accept an array of config as the optional constructing arguments
-- Added `UsernameGenerator` facade
 
 
 ## Install
@@ -689,3 +645,66 @@ And then in `config/username_generator.php` add the driver to the top of the dri
 ## License
 
 MIT
+
+## Change Log
+
+**v2.6.1**
+
+- Added support for PHP 8.1
+- Set minimum PHP version to 7.4
+
+**v2.6**
+
+- Added first and last hook for custom drivers
+- Moved the EmailDriver hook to first 
+- Convert case now happens second rather than first 
+- Generator now supports multibyte characters (Cyrillic, etc.)
+- Text will automatically be converted to ASCII by default
+- Added options for converting to ascii and validating the input string
+
+**v2.5.1**
+
+- Fixes issue where custom dictionary nouns and adjectives were not being used
+
+**v2.5**
+
+- Added maximum length check.
+- Added ability for pre-filled usernames to go through generate process to allow for consistent username styles.
+- Added checking for similar usernames using REGEXP or LIKE (LIKE is a fallback if REGEXP fails).
+- Added a check if a username is unique as is before checking for similar ones.
+- Updated `composer.json` to support PHP 7.2 and above
+- Updated readme for better Laravel 8+ quickstart
+
+**v2.4**
+
+- This is a minor change but if you're using older versions of Laravel you may need to update your config file.
+- Changed default User model from `App\User` to `App\Models\User` to mirror new Laravel versions (8.0+).
+- Moved the adjective and noun word lists from the config file to a separate file, making the published config smaller and allowing you to create your own word lists if you wish.
+
+**v2.3**
+
+- Added support for random dictionary based usernames if a name is not provided. See the [generate](#generatename) method
+
+**v2.2.2**
+
+- Fixed bug where if a custom column name was used and set using `generatorConfig` it was not being passed through.
+- Fixed support for overriding the `getName` method from `GeneratesUsernames`
+
+**v2.2**
+
+- Added support for minimum length
+
+**v2.1**
+
+- Switched to a driver based conversion
+- Added email support
+
+*Note: Nothing should break with this update but let me know if you have any issues.*
+
+**v2.0**
+
+- Removed support for deprecated `makeUsername` method
+- `Generator` will now only accept an array of config as the optional constructing arguments
+- Added `UsernameGenerator` facade
+
+
