@@ -6,7 +6,9 @@
 ![Tests](https://github.com/taylornetwork/laravel-username-generator/workflows/Tests/badge.svg)
 ![StyleCI](https://github.styleci.io/repos/104370109/shield?branch=master)
 
-Easily generate unique usernames for a Laravel User Model
+Easily generate unique usernames for a Laravel User Model.
+
+Works for Laravel versions above 5.5 including Laravel 9.
 
 1. [Most Recent Update](#most-recent-update)
 2. [Install](#install)
@@ -207,7 +209,7 @@ For example
    
    'allowed_characters' => 'А-Яа-яA-Za-z-_' // Includes Cyrillic, Latin characters as well as '-' and '_'
    
-   'allowed_characters' => '\p{Cryillic}\p{Greek}\p{Latin}\s ' // Includes cryillic, greek and latin sets and all spaces
+   'allowed_characters' => '\p{Cyrillic}\p{Greek}\p{Latin}\s ' // Includes cyrillic, greek and latin sets and all spaces
 ```
 
 Please note that all characters not included in this list are removed before performing any operations. 
@@ -491,7 +493,7 @@ If you want to enforce a maximum length for usernames generated change the `max_
 'max_length' => 6,
 ```
 
-By default if the generator generates a username more than the minimum length it will cut it to the max length value and then try to make it unique again. 
+By default if the generator generates a username more than the maximum length it will cut it to the max length value and then try to make it unique again. 
 If that becomes too long it will remove one character at a time until a unique username with the correct length has been generated.
 
 For example
@@ -543,7 +545,7 @@ $generator->generate('Αυτό είναι ένα τεστ');
 
 2 drivers are included, `NameDriver` (default) and `EmailDriver`
 
-To use a specific driver, if none is specified the default is used.
+To use a specific driver
 
 ```php
 UsernameGenerator::usingEmail()->generate('testuser@example.com');
