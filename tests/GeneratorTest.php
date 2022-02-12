@@ -383,7 +383,7 @@ class GeneratorTest extends TestCase
     {
         $count = 20;
 
-        while($count > 0) {
+        while ($count > 0) {
             $model = new TraitedUser(['name' => 'Multiple Names']);
             $model->save();
             $count--;
