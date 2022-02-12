@@ -378,4 +378,18 @@ class GeneratorTest extends TestCase
 
         $this->assertEquals('SimpleTest', $g->generate());
     }
+
+    public function testMulti()
+    {
+        $count = 20;
+
+        while($count > 0) {
+            $model = new TraitedUser(['name' => 'Multiple Names']);
+            $model->save();
+            $count--;
+        }
+
+        $this->assertEquals(20, TraitedUser::where('name', 'Multiple Names')->count());
+        $this->assertNotNull(TraitedUser::where('username', 'multiplenames19')->first());
+    }
 }
