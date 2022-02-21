@@ -72,9 +72,7 @@ trait FindSimilarUsernames
      */
     private function searchUsingRegexp(string $username)
     {
-        $column = $this->getColumn();
-
-        return static::whereRaw("$column REGEXP '{$username}([0-9]*)?$'")->get();
+        return static::where($this->getColumn(), 'REGEXP', $username.'('.$this->getSeparator().')?([0-9]*)?$')->get();
     }
 
     /**
@@ -85,5 +83,24 @@ trait FindSimilarUsernames
     private function getColumn(): string
     {
         return $this->usernameColumn ?? config('username_generator.column', 'username');
+    }
+
+    /**
+     * Get the username separator.
+     *
+     * Check if the model has a custom separator in its class before checking config.
+     *
+     * @return string
+     */
+    private function getSeparator(): string
+    {
+        if (method_exists($this, 'generatorConfig')) {
+            $generator = new Generator();
+            $this->generatorConfig($generator);
+
+            return $generator->getConfig('separator', '');
+        }
+
+        return config('username_generator.separator', '');
     }
 }

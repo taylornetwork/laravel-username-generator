@@ -36,12 +36,13 @@ Works for Laravel versions above 5.5 including Laravel 9.
 
 ## Most Recent Update
 
-**v2.6.1**
+**v2.6.2**
 
-- Added support for PHP 8.1
-- Set minimum PHP version to 7.4
+- Fixed potential SQL injection issue when using REGEXP function.
+- Fixed issue where REGEXP function was not returning correct number of similar usernames only when using a separator.
+- Changed default config option `prefer_regexp` from `true` to `false`
 
-*Updated January 2, 2022*
+*Updated Feb 21, 2022*
 
 
 
@@ -649,6 +650,12 @@ And then in `config/username_generator.php` add the driver to the top of the dri
 MIT
 
 ## Change Log
+
+**v2.6.2**
+
+- Fixed potential SQL injection issue when using REGEXP function.
+- Fixed issue where REGEXP function was not returning correct number of similar usernames only when using a separator.
+- Changed default config option `prefer_regexp` from `true` to `false`
 
 **v2.6.1**
 
