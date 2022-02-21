@@ -94,9 +94,10 @@ trait FindSimilarUsernames
      */
     private function getSeparator(): string
     {
-        if(method_exists($this, 'generatorConfig')) {
+        if (method_exists($this, 'generatorConfig')) {
             $generator = new Generator();
             $this->generatorConfig($generator);
+
             return $generator->getConfig('separator', '');
         }
 
