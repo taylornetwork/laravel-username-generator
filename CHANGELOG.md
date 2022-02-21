@@ -3,8 +3,10 @@
 ## [Unreleased]
 
 ## [2.6.2] - 2022-02-21
-### Fixed
+### Security
 - Possible SQL injection vulnerability, see [#54](https://github.com/taylornetwork/laravel-username-generator/pull/54)
+
+### Fixed
 - Bug where `findSimilarUsernames` would return an incorrect number of similarities when using the REGEXP function with a separator.
 
 ### Changed
