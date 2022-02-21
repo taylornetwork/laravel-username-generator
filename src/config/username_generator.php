@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use TaylorNetwork\UsernameGenerator\Drivers\EmailDriver;
 use TaylorNetwork\UsernameGenerator\Drivers\NameDriver;
 
@@ -54,7 +53,7 @@ return [
      *
      * This is only used if unique is true
      */
-    'model' => User::class,
+    'model' => \App\Models\User::class,
 
     /*
      * Database field to check and store username
@@ -102,9 +101,11 @@ return [
     'generate_entered_username' => true,
 
     /*
-     * Prefer using REGEXP
+     * Prefer using database REGEXP function?
+     *
+     * LIKE function will be used as a backup on failure.
      */
-    'prefer_regexp' => true,
+    'prefer_regexp' => false,
 
     /*
      * Field Map
