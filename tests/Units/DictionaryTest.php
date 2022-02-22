@@ -19,8 +19,8 @@ class DictionaryTest extends TestCase
         $g = new Generator([
             'dictionary' => [
                 'nouns'      => ['test'],
-                'adjectives' => ['simple']
-            ]
+                'adjectives' => ['simple'],
+            ],
         ]);
 
         $this->assertEquals('simpletest', $g->generate());

@@ -2,9 +2,9 @@
 
 namespace TaylorNetwork\UsernameGenerator\Tests;
 
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use TaylorNetwork\UsernameGenerator\Facades\UsernameGenerator;
 use TaylorNetwork\UsernameGenerator\ServiceProvider;
-use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use TaylorNetwork\UsernameGenerator\Tests\Database\Seeders\CustomColumnUserSeeder;
 use TaylorNetwork\UsernameGenerator\Tests\Database\Seeders\CustomFieldUserSeeder;
 use TaylorNetwork\UsernameGenerator\Tests\Database\Seeders\EmailUserSeeder;

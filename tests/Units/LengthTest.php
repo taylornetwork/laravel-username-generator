@@ -13,7 +13,7 @@ class LengthTest extends TestCase
     public function testTooShortPad()
     {
         $g = new Generator([
-            'min_length' => 6
+            'min_length' => 6,
         ]);
         $username = $g->generate('TEST');
 
@@ -25,7 +25,7 @@ class LengthTest extends TestCase
     {
         $g = new Generator([
             'min_length'                   => 6,
-            'throw_exception_on_too_short' => true
+            'throw_exception_on_too_short' => true,
         ]);
 
         $this->expectException(UsernameTooShortException::class);
@@ -35,7 +35,7 @@ class LengthTest extends TestCase
     public function testTooLongShrink()
     {
         $g = new Generator([
-            'max_length' => 3
+            'max_length' => 3,
         ]);
 
         $this->assertEquals('tes', $g->generate('test user'));
@@ -45,7 +45,7 @@ class LengthTest extends TestCase
     {
         $g = new Generator([
             'max_length'                  => 3,
-            'throw_exception_on_too_long' => true
+            'throw_exception_on_too_long' => true,
         ]);
 
         $this->expectException(UsernameTooLongException::class);
@@ -66,7 +66,7 @@ class LengthTest extends TestCase
     public function testTooLongShrinkUnique()
     {
         $g = new Generator([
-            'max_length' => 3
+            'max_length' => 3,
         ]);
 
         $this->assertEquals('te2', $g->generate('teeeeee'));

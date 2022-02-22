@@ -2,15 +2,15 @@
 
 namespace TaylorNetwork\UsernameGenerator\Tests\Units;
 
-use TaylorNetwork\UsernameGenerator\Tests\TestCase;
 use TaylorNetwork\UsernameGenerator\Generator;
+use TaylorNetwork\UsernameGenerator\Tests\TestCase;
 
 class CaseTest extends TestCase
 {
     public function testLower()
     {
         $g = new Generator([
-            'case' => 'lower'
+            'case' => 'lower',
         ]);
 
         $this->assertEquals('testuser', $g->generate('TeSt UsEr'));
@@ -19,7 +19,7 @@ class CaseTest extends TestCase
     public function testUpper()
     {
         $g = new Generator([
-            'case' => 'upper'
+            'case' => 'upper',
         ]);
 
         $this->assertEquals('TESTUSER', $g->generate('TeSt UsEr'));
@@ -28,7 +28,7 @@ class CaseTest extends TestCase
     public function testTitle()
     {
         $g = new Generator([
-            'case' => 'title'
+            'case' => 'title',
         ]);
 
         $this->assertEquals('TestUser', $g->generate('TeSt UsEr'));
@@ -37,7 +37,7 @@ class CaseTest extends TestCase
     public function testMixed()
     {
         $g = new Generator([
-            'case' => 'mixed'
+            'case' => 'mixed',
         ]);
 
         $this->assertEquals('TeStUsEr', $g->generate('TeSt UsEr'));
@@ -46,7 +46,7 @@ class CaseTest extends TestCase
     public function testUcfirst()
     {
         $g = new Generator([
-            'case' => 'ucfirst'
+            'case' => 'ucfirst',
         ]);
 
         $this->assertEquals('Testuser', $g->generate('test user'));

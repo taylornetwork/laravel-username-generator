@@ -10,7 +10,7 @@ class SeparatorTest extends TestCase
     public function testNoSeparator()
     {
         $g = new Generator([
-            'separator' => ''
+            'separator' => '',
         ]);
 
         $this->assertEquals('separatortest', $g->generate('separator test'));
@@ -19,7 +19,7 @@ class SeparatorTest extends TestCase
     public function testUnderscore()
     {
         $g = new Generator([
-            'separator' => '_'
+            'separator' => '_',
         ]);
 
         $this->assertEquals('separator_test', $g->generate('separator test'));
@@ -28,7 +28,7 @@ class SeparatorTest extends TestCase
     public function testDash()
     {
         $g = new Generator([
-            'separator' => '-'
+            'separator' => '-',
         ]);
 
         $this->assertEquals('separator-test', $g->generate('separator test'));
@@ -37,7 +37,7 @@ class SeparatorTest extends TestCase
     public function testMultiCharacter()
     {
         $g = new Generator([
-            'separator' => '*&'
+            'separator' => '*&',
         ]);
 
         $this->assertEquals('separator*&test', $g->generate('separator test'));

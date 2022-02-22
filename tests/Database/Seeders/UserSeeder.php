@@ -42,5 +42,4 @@ class UserSeeder extends Seeder
         User::create(['name' => 'Multi User', 'username' => 'multi_user_10']);
         User::create(['name' => 'Multi User', 'username' => 'multi_user_11']);
     }
-
 }

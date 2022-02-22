@@ -17,7 +17,7 @@ class CharacterSetTest extends TestCase
     public function testNoValidation()
     {
         $g = new Generator([
-            'validate_characters' => false
+            'validate_characters' => false,
         ]);
 
         $this->assertEquals('-!111t$est&u*s(e)r', $g->generate('  -! 1 1 1T$eSt &   U*S(E)r    '));
@@ -26,7 +26,7 @@ class CharacterSetTest extends TestCase
     public function testExtraCharacters()
     {
         $g = new Generator([
-            'allowed_characters' => 'A-Za-z!_\s '
+            'allowed_characters' => 'A-Za-z!_\s ',
         ]);
 
         $this->assertEquals('test_user!', $g->generate('Test_User!---   ++++ '));
@@ -35,7 +35,7 @@ class CharacterSetTest extends TestCase
     public function testLatinSet()
     {
         $g = new Generator([
-            'allowed_characters' => '\p{Latin}\s '
+            'allowed_characters' => '\p{Latin}\s ',
         ]);
 
         $this->assertEquals('testuser', $g->generate('111!!!teST**** uSER '));

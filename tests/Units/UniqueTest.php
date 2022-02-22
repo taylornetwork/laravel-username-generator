@@ -17,7 +17,7 @@ class UniqueTest extends TestCase
     public function testUniqueSeparator()
     {
         $g = new Generator([
-            'separator' => '_'
+            'separator' => '_',
         ]);
 
         $this->assertEquals('unique_user_1', $g->generate('Unique User'));
@@ -26,7 +26,7 @@ class UniqueTest extends TestCase
     public function testMultiUniqueWithSeparator()
     {
         $g = new Generator([
-            'separator' => '_'
+            'separator' => '_',
         ]);
 
         $this->assertEquals('multi_user_12', $g->generate('Multi User'));
