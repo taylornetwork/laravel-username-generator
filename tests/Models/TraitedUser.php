@@ -1,10 +1,10 @@
 <?php
 
-namespace TaylorNetwork\Tests\Environment;
+namespace TaylorNetwork\UsernameGenerator\Tests\Models;
 
 use TaylorNetwork\UsernameGenerator\GeneratesUsernames;
 
-class TraitedUser extends BaseUser
+class TraitedUser extends User
 {
     use GeneratesUsernames;
 }

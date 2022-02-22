@@ -1,11 +1,11 @@
 <?php
 
-namespace TaylorNetwork\Tests\Environment;
+namespace TaylorNetwork\UsernameGenerator\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use TaylorNetwork\UsernameGenerator\FindSimilarUsernames;
 
-class BaseUser extends Model
+class User extends Model
 {
     use FindSimilarUsernames;
 
