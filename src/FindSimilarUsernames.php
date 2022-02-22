@@ -18,7 +18,7 @@ trait FindSimilarUsernames
      */
     public function findSimilarUsernames(string $username)
     {
-        $preferRegexp = $this->preferRegexp ?? config('username_generator.prefer_regexp', true);
+        $preferRegexp = $this->preferRegexp ?? $this->getModelGeneratorConfig()->getConfig('prefer_regexp', false);
 
         if (!$preferRegexp) {
             return $this->searchUsingLike($username);
@@ -82,25 +82,38 @@ trait FindSimilarUsernames
      */
     private function getColumn(): string
     {
-        return $this->usernameColumn ?? config('username_generator.column', 'username');
+        return $this->usernameColumn ?? $this->getModelGeneratorConfig()->getConfig('column', 'username');
     }
 
     /**
      * Get the username separator.
      *
-     * Check if the model has a custom separator in its class before checking config.
-     *
      * @return string
      */
     private function getSeparator(): string
     {
-        if (method_exists($this, 'generatorConfig')) {
-            $generator = new Generator();
-            $this->generatorConfig($generator);
+        return $this->getModelGeneratorConfig()->getConfig('separator', '');
+    }
 
-            return $generator->getConfig('separator', '');
+    /**
+     * Get the model specific generator config.
+     *
+     * Since a model could extend the GeneratesUsernames trait, we need to check if
+     * it has any specific config that would change the behaviour of this trait.
+     *
+     * Eventually will deprecate the generatorConfig and change it to simply return an
+     * array that will then be passed to the generator.
+     *
+     * @return Generator
+     */
+    private function getModelGeneratorConfig(): Generator
+    {
+        $generator = new Generator();
+
+        if (method_exists($this, 'generatorConfig')) {
+            $this->generatorConfig($generator);
         }
 
-        return config('username_generator.separator', '');
+        return $generator;
     }
 }

@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- FindSimilarUsernames no longer needs a `usernameColumn` property in the parent model if the column is different than `'username'` and the config file is not directly changed. 
 
 ## [2.6.2] - 2022-02-21
 ### Security
