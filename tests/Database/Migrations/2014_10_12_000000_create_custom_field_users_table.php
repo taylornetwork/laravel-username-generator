@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserEmailTable extends Migration
+class CreateCustomFieldUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateUserEmailTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_email', function (Blueprint $table) {
+        Schema::create('custom_field_users', function (Blueprint $table) {
             $table->increments('id')->index();
-            $table->string('email');
+            $table->string('full_name');
             $table->string('username')->unique()->nullable();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateUserEmailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_email');
+        Schema::dropIfExists('custom_field_users');
     }
 }

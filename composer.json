@@ -23,7 +23,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "TaylorNetwork\\Tests\\": "tests/"
+            "TaylorNetwork\\UsernameGenerator\\Tests\\": "tests/"
         }
     },
     "extra": {
