@@ -14,7 +14,7 @@ class GenerateForMethodTest extends TestCase
     public function testGenerateForMethod()
     {
         $model = new User([
-            'name' => 'Test User'
+            'name' => 'Test User',
         ]);
 
         $g = new Generator();
@@ -25,7 +25,7 @@ class GenerateForMethodTest extends TestCase
     public function testImplicitDriverEmail()
     {
         $model = new EmailUser([
-            'email' => 'testuser@example.com'
+            'email' => 'testuser@example.com',
         ]);
 
         $this->assertEquals('testuser', UsernameGenerator::generateFor($model));
@@ -34,7 +34,7 @@ class GenerateForMethodTest extends TestCase
     public function testExplicitDriverEmail()
     {
         $model = new EmailUser([
-            'email' => 'testuser@example.com'
+            'email' => 'testuser@example.com',
         ]);
 
         $g = new Generator();
@@ -46,7 +46,7 @@ class GenerateForMethodTest extends TestCase
     public function testFieldMapString()
     {
         $model = new CustomFieldUser([
-            'full_name' => 'Test User'
+            'full_name' => 'Test User',
         ]);
 
         $g = new Generator([
@@ -62,7 +62,7 @@ class GenerateForMethodTest extends TestCase
     public function testFieldMapArray()
     {
         $model = new CustomFieldUser([
-            'full_name' => 'Test User'
+            'full_name' => 'Test User',
         ]);
 
         $g = new Generator([
@@ -89,5 +89,4 @@ class GenerateForMethodTest extends TestCase
 
         $this->assertEquals('testuser', $g->generateFor($model));
     }
-
 }

@@ -12,7 +12,7 @@ class TraitTest extends TestCase
     public function testEmptyEloquentSave()
     {
         $user = new TraitedUser([
-            'name' => 'Eloquent Save'
+            'name' => 'Eloquent Save',
         ]);
         $user->save();
 
@@ -36,7 +36,7 @@ class TraitTest extends TestCase
     {
         $user = new TraitedUser([
             'name'     => 'Filled Validation',
-            'username' => 'UniqueUser!'
+            'username' => 'UniqueUser!',
         ]);
         $user->save();
 
@@ -72,7 +72,7 @@ class TraitTest extends TestCase
     public function testCustomColumnUnique()
     {
         $user = new CustomColumnUser([
-            'name' => 'Column User'
+            'name' => 'Column User',
         ]);
         $user->save();
 
