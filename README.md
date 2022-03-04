@@ -1,10 +1,11 @@
 # Laravel Username Generator
 
-![Stable](https://poser.pugx.org/taylornetwork/laravel-username-generator/v/stable)
-![Downloads](https://poser.pugx.org/taylornetwork/laravel-username-generator/downloads)
-![License](https://poser.pugx.org/taylornetwork/laravel-username-generator/license)
-![Tests](https://github.com/taylornetwork/laravel-username-generator/workflows/Tests/badge.svg)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/taylornetwork/laravel-username-generator?label=release&color=blueviolet&style=flat-square)
+![Packagist Downloads](https://img.shields.io/packagist/dt/taylornetwork/laravel-username-generator?style=flat-square&color=blue)
+![GitHub](https://img.shields.io/github/license/taylornetwork/laravel-username-generator?color=orange&logo=github&style=flat-square)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/taylornetwork/laravel-username-generator/master?label=tests&logo=github&style=flat-square)
 ![StyleCI](https://github.styleci.io/repos/104370109/shield?branch=master)
+![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/taylornetwork/laravel-username-generator/master?style=flat-square)
 
 Easily generate unique usernames for a Laravel User Model.
 
