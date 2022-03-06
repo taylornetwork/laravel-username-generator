@@ -640,4 +640,4 @@ And then in `config/username_generator.php` add the driver to the top of the dri
 
 ## License
 
-See the [License](https://github.com/taylornetwork/laravel-username-generator/blob/master/LICENSE.md)
+See the [License](https://github.com/taylornetwork/laravel-username-generator/blob/master/LICENSE)
