@@ -323,6 +323,4 @@ abstract class BaseDriver implements Driver, HandlesConfig
     {
         return $this->field;
     }
-
-
 }
