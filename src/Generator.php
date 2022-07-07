@@ -108,7 +108,7 @@ class Generator implements HandlesConfig
     /**
      * Forward the generate call to the selected driver.
      *
-     * @param BaseDriver      $driver
+     * @param BaseDriver  $driver
      * @param string|null $text
      *
      * @return string

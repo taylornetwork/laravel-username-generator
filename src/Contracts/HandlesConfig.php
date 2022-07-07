@@ -8,6 +8,7 @@ interface HandlesConfig
      * Use a custom, already loaded, config.
      *
      * @param array $config
+     *
      * @return $this
      */
     public function withConfig(array $config): self;
@@ -30,7 +31,8 @@ interface HandlesConfig
      * Set a config value.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return $this
      */
     public function setConfig(string $key, $value = null): self;
@@ -39,7 +41,8 @@ interface HandlesConfig
      * Get a config value.
      *
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return mixed
      */
     public function getConfig(string $key, $default = null);
@@ -62,10 +65,9 @@ interface HandlesConfig
      * Get a Laravel config item.
      *
      * @param string $key
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return mixed
      */
     public static function laravelConfig(string $key, $default);
 }
-
-
