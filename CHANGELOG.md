@@ -6,7 +6,7 @@
 
 ### Added
 - Missing types for some properties.
-- Driver contract.
+- Driver and HandlesConfig contracts.
 - getDriver() method in Generator class.
 
 ## [2.6.2] - 2022-02-21
