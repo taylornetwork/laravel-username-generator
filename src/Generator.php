@@ -4,10 +4,11 @@ namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
 use TaylorNetwork\UsernameGenerator\Contracts\Driver;
+use TaylorNetwork\UsernameGenerator\Contracts\HandlesConfig;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
-class Generator
+class Generator implements HandlesConfig
 {
     use LoadsConfig;
 
@@ -70,7 +71,7 @@ class Generator
             throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
         }
 
-        $field = $this->getDriver()->field;
+        $field = $this->getDriver()->getField();
 
         return $this->forwardCallToDriver($this->getDriver(), $model->$field);
     }

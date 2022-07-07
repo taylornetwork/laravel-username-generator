@@ -4,12 +4,13 @@ namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use Illuminate\Support\Str;
 use TaylorNetwork\UsernameGenerator\Contracts\Driver;
+use TaylorNetwork\UsernameGenerator\Contracts\HandlesConfig;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
-abstract class BaseDriver implements Driver
+abstract class BaseDriver implements Driver, HandlesConfig
 {
     use LoadsConfig;
 
@@ -147,9 +148,7 @@ abstract class BaseDriver implements Driver
             $text .= rand(0, 9);
         }
 
-        $text = $this->makeUnique($text);
-
-        return $text;
+        return $this->makeUnique($text);
     }
 
     /**
@@ -316,4 +315,14 @@ abstract class BaseDriver implements Driver
     {
         return mb_strlen($text, $this->getConfig('encoding'));
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+
 }

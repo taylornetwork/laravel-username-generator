@@ -19,4 +19,11 @@ interface Driver
      * @return string
      */
     public function getOriginal(): string;
+
+    /**
+     * Get the field name.
+     *
+     * @return string
+     */
+    public function getField(): string;
 }
