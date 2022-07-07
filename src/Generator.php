@@ -3,6 +3,7 @@
 namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
+use TaylorNetwork\UsernameGenerator\Contracts\Driver;
 use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
@@ -14,9 +15,9 @@ class Generator
     /**
      * The driver to use to convert.
      *
-     * @var BaseDriver
+     * @var Driver
      */
-    protected $driver;
+    protected Driver $driver;
 
     /**
      * Generator constructor.
@@ -38,11 +39,7 @@ class Generator
      */
     public function generate(?string $text = null): string
     {
-        if (!isset($this->driver)) {
-            $this->driver = Arr::first($this->getConfig('drivers'));
-        }
-
-        return (new $this->driver())->withConfig($this->config())->generate($text);
+        return $this->getDriver()->withConfig($this->config())->generate($text);
     }
 
     /**
@@ -56,9 +53,8 @@ class Generator
      */
     public function generateFor(object $model): string
     {
-        $drivers = $this->getConfig('drivers');
-
         if (!isset($this->driver)) {
+            $drivers = $this->getConfig('drivers');
             foreach ($drivers as $driver) {
                 $driverInstance = new $driver();
                 $field = $driverInstance->field;
@@ -75,10 +71,8 @@ class Generator
             throw new GeneratorException('Could not find driver to use for \'generateFor\' method. Set one by using \'setDriver\' method.');
         }
 
-        $driverInstance = new $this->driver();
-        $field = $driverInstance->field;
-
-        return $this->forwardCallToDriver($driverInstance, $model->$field);
+        $field = $this->getDriver()->field;
+        return $this->forwardCallToDriver($this->getDriver(), $model->$field);
     }
 
     /**
@@ -113,17 +107,13 @@ class Generator
     /**
      * Forward the generate call to the selected driver.
      *
-     * @param string|BaseDriver $driver
+     * @param Driver $driver
      * @param string|null       $text
      *
      * @return string
      */
-    protected function forwardCallToDriver($driver, ?string $text): string
+    protected function forwardCallToDriver(Driver $driver, ?string $text): string
     {
-        if (gettype($driver) === 'string') {
-            $driver = new $driver();
-        }
-
         return $driver->withConfig($this->config())->generate($text);
     }
 
@@ -136,13 +126,23 @@ class Generator
      */
     public function setDriver(string $driverKey): self
     {
-        if (class_exists($driverKey)) {
-            $this->driver = $driverKey;
-        } else {
-            $this->driver = $this->getConfig('drivers')[$driverKey];
+        $driverClass = class_exists($driverKey) ? $driverKey : $this->getConfig('drivers')[$driverKey];
+        $this->driver = new $driverClass();
+        return $this;
+    }
+
+    /**
+     * Get the current Driver or default.
+     *
+     * @return Driver
+     */
+    public function getDriver(): Driver
+    {
+        if(!isset($this->driver)) {
+            $this->driver = new (Arr::first($this->getConfig('drivers')))();
         }
 
-        return $this;
+        return $this->driver;
     }
 
     /**

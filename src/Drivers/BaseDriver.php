@@ -3,12 +3,13 @@
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use Illuminate\Support\Str;
+use TaylorNetwork\UsernameGenerator\Contracts\Driver;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
-abstract class BaseDriver
+abstract class BaseDriver implements Driver
 {
     use LoadsConfig;
 
@@ -17,14 +18,14 @@ abstract class BaseDriver
      *
      * @var string
      */
-    public $field;
+    public string $field;
 
     /**
      * The original text before conversion.
      *
      * @var string
      */
-    protected $original;
+    protected string $original;
 
     /**
      * Order of operations.
@@ -33,7 +34,7 @@ abstract class BaseDriver
      *
      * @var array
      */
-    protected $order = [
+    protected array $order = [
         'toAscii',
         'stripUnwantedCharacters',
         'convertCase',
@@ -61,11 +62,7 @@ abstract class BaseDriver
     }
 
     /**
-     * Generate the username.
-     *
-     * @param string|null $text
-     *
-     * @return string
+     * @inheritDoc
      */
     public function generate(?string $text = null): string
     {
@@ -267,9 +264,7 @@ abstract class BaseDriver
     }
 
     /**
-     * Get the original unconverted text.
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getOriginal(): string
     {

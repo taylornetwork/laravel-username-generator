@@ -11,14 +11,14 @@ trait LoadsConfig
      *
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Has the config been loaded?
      *
      * @var bool
      */
-    protected $configLoaded = false;
+    protected bool $configLoaded = false;
 
     /**
      * Access an instance of the unique to model.
