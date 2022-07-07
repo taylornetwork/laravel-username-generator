@@ -3,8 +3,8 @@
 namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
-use TaylorNetwork\UsernameGenerator\Contracts\Driver;
 use TaylorNetwork\UsernameGenerator\Contracts\HandlesConfig;
+use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
@@ -15,9 +15,9 @@ class Generator implements HandlesConfig
     /**
      * The driver to use to convert.
      *
-     * @var Driver
+     * @var BaseDriver
      */
-    protected Driver $driver;
+    protected BaseDriver $driver;
 
     /**
      * Generator constructor.
@@ -108,12 +108,12 @@ class Generator implements HandlesConfig
     /**
      * Forward the generate call to the selected driver.
      *
-     * @param Driver      $driver
+     * @param BaseDriver      $driver
      * @param string|null $text
      *
      * @return string
      */
-    protected function forwardCallToDriver(Driver $driver, ?string $text): string
+    protected function forwardCallToDriver(BaseDriver $driver, ?string $text): string
     {
         return $driver->withConfig($this->config())->generate($text);
     }
@@ -136,9 +136,9 @@ class Generator implements HandlesConfig
     /**
      * Get the current Driver or default.
      *
-     * @return Driver
+     * @return BaseDriver
      */
-    public function getDriver(): Driver
+    public function getDriver(): BaseDriver
     {
         if (!isset($this->driver)) {
             $driverClass = Arr::first($this->getConfig('drivers'));
