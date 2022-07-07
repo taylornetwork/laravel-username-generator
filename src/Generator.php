@@ -4,7 +4,6 @@ namespace TaylorNetwork\UsernameGenerator;
 
 use Illuminate\Support\Arr;
 use TaylorNetwork\UsernameGenerator\Contracts\Driver;
-use TaylorNetwork\UsernameGenerator\Drivers\BaseDriver;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
@@ -72,6 +71,7 @@ class Generator
         }
 
         $field = $this->getDriver()->field;
+
         return $this->forwardCallToDriver($this->getDriver(), $model->$field);
     }
 
@@ -107,8 +107,8 @@ class Generator
     /**
      * Forward the generate call to the selected driver.
      *
-     * @param Driver $driver
-     * @param string|null       $text
+     * @param Driver      $driver
+     * @param string|null $text
      *
      * @return string
      */
@@ -128,6 +128,7 @@ class Generator
     {
         $driverClass = class_exists($driverKey) ? $driverKey : $this->getConfig('drivers')[$driverKey];
         $this->driver = new $driverClass();
+
         return $this;
     }
 
@@ -138,7 +139,7 @@ class Generator
      */
     public function getDriver(): Driver
     {
-        if(!isset($this->driver)) {
+        if (!isset($this->driver)) {
             $this->driver = new (Arr::first($this->getConfig('drivers')))();
         }
 
