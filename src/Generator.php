@@ -139,7 +139,8 @@ class Generator
     public function getDriver(): Driver
     {
         if(!isset($this->driver)) {
-            $this->driver = new (Arr::first($this->getConfig('drivers')))();
+            $driverClass = Arr::first($this->getConfig('drivers'));
+            $this->driver = new $driverClass();
         }
 
         return $this->driver;
