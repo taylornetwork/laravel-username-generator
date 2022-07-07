@@ -8,6 +8,7 @@ interface Driver
      * Generate a username given text.
      *
      * @param string|null $text
+     *
      * @return string
      */
     public function generate(?string $text = null): string;
@@ -19,5 +20,3 @@ interface Driver
      */
     public function getOriginal(): string;
 }
-
-
