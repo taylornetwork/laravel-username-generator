@@ -4,7 +4,7 @@ namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 class EmailDriver extends BaseDriver
 {
-    public $field = 'email';
+    public string $field = 'email';
 
     /**
      * Strip everything after the @ symbol.

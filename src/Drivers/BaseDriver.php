@@ -3,12 +3,14 @@
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 use Illuminate\Support\Str;
+use TaylorNetwork\UsernameGenerator\Contracts\Driver;
+use TaylorNetwork\UsernameGenerator\Contracts\HandlesConfig;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\GeneratorException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooLongException;
 use TaylorNetwork\UsernameGenerator\Support\Exceptions\UsernameTooShortException;
 use TaylorNetwork\UsernameGenerator\Support\LoadsConfig;
 
-abstract class BaseDriver
+abstract class BaseDriver implements Driver, HandlesConfig
 {
     use LoadsConfig;
 
@@ -17,14 +19,14 @@ abstract class BaseDriver
      *
      * @var string
      */
-    public $field;
+    public string $field;
 
     /**
      * The original text before conversion.
      *
      * @var string
      */
-    protected $original;
+    protected string $original;
 
     /**
      * Order of operations.
@@ -33,7 +35,7 @@ abstract class BaseDriver
      *
      * @var array
      */
-    protected $order = [
+    protected array $order = [
         'toAscii',
         'stripUnwantedCharacters',
         'convertCase',
@@ -61,11 +63,7 @@ abstract class BaseDriver
     }
 
     /**
-     * Generate the username.
-     *
-     * @param string|null $text
-     *
-     * @return string
+     * @inheritDoc
      */
     public function generate(?string $text = null): string
     {
@@ -150,9 +148,7 @@ abstract class BaseDriver
             $text .= rand(0, 9);
         }
 
-        $text = $this->makeUnique($text);
-
-        return $text;
+        return $this->makeUnique($text);
     }
 
     /**
@@ -267,9 +263,7 @@ abstract class BaseDriver
     }
 
     /**
-     * Get the original unconverted text.
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getOriginal(): string
     {
@@ -320,5 +314,13 @@ abstract class BaseDriver
     protected function length(string $text): int
     {
         return mb_strlen($text, $this->getConfig('encoding'));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getField(): string
+    {
+        return $this->field;
     }
 }

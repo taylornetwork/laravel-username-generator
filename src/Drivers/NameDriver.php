@@ -4,5 +4,5 @@ namespace TaylorNetwork\UsernameGenerator\Drivers;
 
 class NameDriver extends BaseDriver
 {
-    public $field = 'name';
+    public string $field = 'name';
 }

@@ -11,19 +11,17 @@ trait LoadsConfig
      *
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Has the config been loaded?
      *
      * @var bool
      */
-    protected $configLoaded = false;
+    protected bool $configLoaded = false;
 
     /**
-     * Access an instance of the unique to model.
-     *
-     * @return object|null
+     * @inheritDoc
      */
     public function model(): ?object
     {
@@ -37,12 +35,7 @@ trait LoadsConfig
     }
 
     /**
-     * Get a config value.
-     *
-     * @param string $key
-     * @param mixed  $default
-     *
-     * @return mixed
+     * @inheritDoc
      */
     public function getConfig(string $key, $default = null)
     {
@@ -60,12 +53,7 @@ trait LoadsConfig
     }
 
     /**
-     * Set config.
-     *
-     * @param string|array $key
-     * @param mixed        $value
-     *
-     * @return LoadsConfig
+     * @inheritDoc
      */
     public function setConfig($key, $value = null): self
     {
@@ -89,7 +77,7 @@ trait LoadsConfig
     }
 
     /**
-     * Load config from Laravel config file.
+     * @inheritDoc
      */
     public function loadConfig(): void
     {
@@ -104,12 +92,7 @@ trait LoadsConfig
     }
 
     /**
-     * Get Laravel config.
-     *
-     * @param string $key
-     * @param mixed  $default
-     *
-     * @return mixed
+     * @inheritDoc
      */
     public static function laravelConfig(string $key, $default = null)
     {
@@ -125,9 +108,7 @@ trait LoadsConfig
     }
 
     /**
-     * All the loaded config.
-     *
-     * @return array
+     * @inheritDoc
      */
     public function config(): array
     {
@@ -139,11 +120,7 @@ trait LoadsConfig
     }
 
     /**
-     * Import existing config.
-     *
-     * @param array $config
-     *
-     * @return LoadsConfig
+     * @inheritDoc
      */
     public function withConfig(array $config): self
     {
@@ -154,7 +131,15 @@ trait LoadsConfig
     }
 
     /**
-     * Adds the the default dictionary words to the config if not set.
+     * @inheritDoc
+     */
+    public function hasLoaded(): bool
+    {
+        return $this->configLoaded;
+    }
+
+    /**
+     * Adds the default dictionary words to the config if not set.
      */
     private function checkForDictionary(): void
     {

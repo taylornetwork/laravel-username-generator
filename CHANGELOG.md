@@ -1,8 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [2.7] - 2022-07-07
 ### Changed
-- FindSimilarUsernames no longer needs a `usernameColumn` property in the parent model if the column is different than `'username'` and the config file is not directly changed. 
+- FindSimilarUsernames no longer needs a `usernameColumn` property in the parent model if the column is different than `'username'` and the config file is not directly changed.
+
+### Added
+- Missing types for some properties.
+- Driver and HandlesConfig contracts.
+- getDriver() method in Generator class.
 
 ## [2.6.2] - 2022-02-21
 ### Security
