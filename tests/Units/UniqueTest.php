@@ -31,4 +31,10 @@ class UniqueTest extends TestCase
 
         $this->assertEquals('multi_user_12', $g->generate('Multi User'));
     }
+
+    public function testUniqueMustIncrement()
+    {
+        $g = new Generator();
+        $this->assertEquals('randomnum19', $g->generate('Random Num'));
+    }
 }
