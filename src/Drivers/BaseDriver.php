@@ -255,7 +255,14 @@ abstract class BaseDriver implements Driver, HandlesConfig
             }
 
             if (($similar = count($this->model()->findSimilarUsernames($text))) > 0) {
-                return $text.$this->getConfig('separator').$similar;
+                $username = $text.$this->getConfig('separator').$similar;
+
+                // if not unique, due to similar usernames existing in db, increment similar number by one until unique
+                while (method_exists($this->model(), 'isUsernameUnique') && !$this->model()->isUsernameUnique($username)) {
+                    $username = ++$username;
+                }
+
+                return $username;
             }
         }
 
