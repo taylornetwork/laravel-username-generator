@@ -250,7 +250,7 @@ abstract class BaseDriver implements Driver, HandlesConfig
     public function makeUnique(string $text): string
     {
         if ($this->getConfig('unique') && $this->model() && method_exists($this->model(), 'findSimilarUsernames')) {
-            if (method_exists($this->model(), 'isUsernameUnique') && $this->model()->isUsernameUnique($text)) {
+            if ($this->isUnique($text)) {
                 return $text;
             }
 
@@ -258,7 +258,7 @@ abstract class BaseDriver implements Driver, HandlesConfig
                 $username = $text.$this->getConfig('separator').$similar;
 
                 // if not unique, due to similar usernames existing in db, increment similar number by one until unique
-                while (method_exists($this->model(), 'isUsernameUnique') && !$this->model()->isUsernameUnique($username)) {
+                while (!$this->isUnique($username)) {
                     $username = ++$username;
                 }
 
@@ -321,6 +321,18 @@ abstract class BaseDriver implements Driver, HandlesConfig
     protected function length(string $text): int
     {
         return mb_strlen($text, $this->getConfig('encoding'));
+    }
+
+    /**
+     * Check if the given username is unique.
+     *
+     * @param string $text
+     *
+     * @return bool
+     */
+    protected function isUnique(string $text): bool
+    {
+        return method_exists($this->model(), 'isUsernameUnique') && $this->model()->isUsernameUnique($text);
     }
 
     /**
