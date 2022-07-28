@@ -2,7 +2,6 @@
 
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use TaylorNetwork\UsernameGenerator\Contracts\Driver;
@@ -278,13 +277,15 @@ abstract class BaseDriver implements Driver, HandlesConfig
     /**
      * Make unique by counting total similar usernames.
      *
-     * @param string $baseUsername
+     * @param string     $baseUsername
      * @param Collection $similarUsernames
+     *
      * @return string|null
      */
     protected function makeUniqueByCount(string $baseUsername, Collection $similarUsernames): ?string
     {
         $username = $baseUsername.count($similarUsernames);
+
         return $this->isUnique($username) ? $username : null;
     }
 
@@ -292,12 +293,14 @@ abstract class BaseDriver implements Driver, HandlesConfig
      * Make unique by taking the max value and adding 1.
      *
      * @param Collection $similarUsernames
+     *
      * @return string|null
      */
     protected function makeUniqueByMax(Collection $similarUsernames): ?string
     {
         $username = $similarUsernames->max();
-        ++$username;
+        $username++;
+
         return $this->isUnique($username) ? $username : null;
     }
 
@@ -305,15 +308,17 @@ abstract class BaseDriver implements Driver, HandlesConfig
      * If all else fails, make unique by testing values until we succeed.
      *
      * @param string $username
+     *
      * @return string|null
      */
     protected function makeUniqueByIncrement(string $username): ?string
     {
         $attempt = 0;
         while (!$this->isUnique($username) && $attempt < $this->getConfig('increment_max_attempts', 100)) {
-            ++$username;
-            ++$attempt;
+            $username++;
+            $attempt++;
         }
+
         return $this->isUnique($username) ? $username : null;
     }
 

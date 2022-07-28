@@ -79,6 +79,7 @@ trait FindSimilarUsernames
      * Alias for getUsernameColumnName for backwards compatibility.
      *
      * @return string
+     *
      * @deprecated use getUsernameColumnName()
      */
     private function getColumn(): string
