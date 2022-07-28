@@ -2,6 +2,8 @@
 
 namespace TaylorNetwork\UsernameGenerator\Drivers;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use TaylorNetwork\UsernameGenerator\Contracts\Driver;
 use TaylorNetwork\UsernameGenerator\Contracts\HandlesConfig;
@@ -254,19 +256,65 @@ abstract class BaseDriver implements Driver, HandlesConfig
                 return $text;
             }
 
-            if (($similar = count($this->model()->findSimilarUsernames($text))) > 0) {
-                $username = $text.$this->getConfig('separator').$similar;
+            $similarUsernames = $this->model()->findSimilarUsernames($text)->pluck($this->model()->getUsernameColumnName());
+            $baseUsername = $text.$this->getConfig('separator');
 
-                // if not unique, due to similar usernames existing in db, increment similar number by one until unique
-                while (!$this->isUnique($username)) {
-                    $username = ++$username;
-                }
+            if ($username = $this->makeUniqueByCount($baseUsername, $similarUsernames)) {
+                return $username;
+            }
 
+            if ($username = $this->makeUniqueByMax($similarUsernames)) {
+                return $username;
+            }
+
+            if ($username = $this->makeUniqueByIncrement($baseUsername.'0')) {
                 return $username;
             }
         }
 
         return $text;
+    }
+
+    /**
+     * Make unique by counting total similar usernames.
+     *
+     * @param string $baseUsername
+     * @param Collection $similarUsernames
+     * @return string|null
+     */
+    protected function makeUniqueByCount(string $baseUsername, Collection $similarUsernames): ?string
+    {
+        $username = $baseUsername.count($similarUsernames);
+        return $this->isUnique($username) ? $username : null;
+    }
+
+    /**
+     * Make unique by taking the max value and adding 1.
+     *
+     * @param Collection $similarUsernames
+     * @return string|null
+     */
+    protected function makeUniqueByMax(Collection $similarUsernames): ?string
+    {
+        $username = $similarUsernames->max();
+        ++$username;
+        return $this->isUnique($username) ? $username : null;
+    }
+
+    /**
+     * If all else fails, make unique by testing values until we succeed.
+     *
+     * @param string $username
+     * @return string|null
+     */
+    protected function makeUniqueByIncrement(string $username): ?string
+    {
+        $attempt = 0;
+        while (!$this->isUnique($username) && $attempt < $this->getConfig('increment_max_attempts', 100)) {
+            ++$username;
+            ++$attempt;
+        }
+        return $this->isUnique($username) ? $username : null;
     }
 
     /**

@@ -40,7 +40,7 @@ trait FindSimilarUsernames
      */
     public function isUsernameUnique(string $username): bool
     {
-        return static::where($this->getColumn(), $username)->get()->count() === 0;
+        return static::where($this->getUsernameColumnName(), $username)->get()->count() === 0;
     }
 
     /**
@@ -52,10 +52,10 @@ trait FindSimilarUsernames
      */
     private function searchUsingLike(string $username)
     {
-        $exactMatches = static::where($this->getColumn(), $username)->get();
+        $exactMatches = static::where($this->getUsernameColumnName(), $username)->get();
 
         if ($exactMatches) {
-            return static::where($this->getColumn(), 'LIKE', $username.'%')->get();
+            return static::where($this->getUsernameColumnName(), 'LIKE', $username.'%')->get();
         }
 
         return $exactMatches;
@@ -72,15 +72,26 @@ trait FindSimilarUsernames
      */
     private function searchUsingRegexp(string $username)
     {
-        return static::where($this->getColumn(), 'REGEXP', $username.'('.$this->getSeparator().')?([0-9]*)?$')->get();
+        return static::where($this->getUsernameColumnName(), 'REGEXP', $username.'('.$this->getSeparator().')?([0-9]*)?$')->get();
     }
 
     /**
-     * Get the username column.
+     * Alias for getUsernameColumnName for backwards compatibility.
+     *
+     * @return string
+     * @deprecated use getUsernameColumnName()
+     */
+    private function getColumn(): string
+    {
+        return $this->getUsernameColumnName();
+    }
+
+    /**
+     * Get the username column name.
      *
      * @return string
      */
-    private function getColumn(): string
+    public function getUsernameColumnName(): string
     {
         return $this->usernameColumn ?? $this->getModelGeneratorConfig()->getConfig('column', 'username');
     }

@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
         User::create(['name' => 'Random Num', 'username' => 'randomnum']);
         User::create(['name' => 'Random Num', 'username' => 'randomnum10']);
         User::create(['name' => 'Random Num', 'username' => 'randomnum11']);
-        User::create(['name' => 'Random Num', 'username' => 'randomnum12']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum22']);
         User::create(['name' => 'Random Num', 'username' => 'randomnum13']);
         User::create(['name' => 'Random Num', 'username' => 'randomnum14']);
         User::create(['name' => 'Random Num', 'username' => 'randomnum15']);

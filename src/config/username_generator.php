@@ -124,6 +124,12 @@ return [
     'field_map' => [],
 
     /*
+     * Max number of attempts to perform when trying to make a username unique when the
+     * fallback method is used.
+     */
+    'increment_max_attempts' => 100,
+
+    /*
      * Loaded drivers for converting to a username
      */
     'drivers' => [
