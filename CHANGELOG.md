@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.8] - UNRELEASED
+### Added
+- `increment_max_attempts` config option to avoid an infinite loop should increment make unique method get used.
+- `isUnique` method to `BaseDriver`
+
+### Changed
+- FindSimilarUsernames now provides a public `getUsernameColumnName` method. 
+- The `makeUnique` algorithm
+  - Rather than simply counting the total number of similar usernames and adding 1 to it, we'll now handle it in stages - this would cause problems see #63.
+  - Now we perform a check to see if the original algorithm works, then return if so.
+  - If not, we use the list of similar usernames and get the one with the highest value, and add 1 to it, if unique, return it.
+  - If not, we start at 0 and increment and check every value until we either get a unique one, or exhaust the `increment_max_attempts`
+
+### Deprecated
+- FindSimilarUsernames `getColumn` method in favour of `getUsernameColumnName` (this likely affects no one unless you're specifically overriding that trait.)
+
 ## [2.7] - 2022-07-07
 ### Changed
 - FindSimilarUsernames no longer needs a `usernameColumn` property in the parent model if the column is different than `'username'` and the config file is not directly changed.
