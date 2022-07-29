@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
         $this->seedShorts();
         $this->seedUniqueUser();
         $this->seedMultiUser();
+        $this->seedUniqueRandomNumbers();
     }
 
     protected function seedShorts()
@@ -41,5 +42,19 @@ class UserSeeder extends Seeder
         User::create(['name' => 'Multi User', 'username' => 'multi_user_9']);
         User::create(['name' => 'Multi User', 'username' => 'multi_user_10']);
         User::create(['name' => 'Multi User', 'username' => 'multi_user_11']);
+    }
+
+    protected function seedUniqueRandomNumbers()
+    {
+        User::create(['name' => 'Random Num', 'username' => 'randomnum']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum10']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum11']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum22']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum13']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum14']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum15']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum16']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum17']);
+        User::create(['name' => 'Random Num', 'username' => 'randomnum18']);
     }
 }
