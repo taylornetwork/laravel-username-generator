@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.8] - UNRELEASED
+## [2.8] - 2022-07-29
 ### Added
 - `increment_max_attempts` config option to avoid an infinite loop should increment make unique method get used.
 - `isUnique` method to `BaseDriver`
