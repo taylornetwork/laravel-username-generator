@@ -258,17 +258,10 @@ abstract class BaseDriver implements Driver, HandlesConfig
             $similarUsernames = $this->model()->findSimilarUsernames($text)->pluck($this->model()->getUsernameColumnName());
             $baseUsername = $text.$this->getConfig('separator');
 
-            if ($username = $this->makeUniqueByCount($baseUsername, $similarUsernames)) {
-                return $username;
-            }
-
-            if ($username = $this->makeUniqueByMax($similarUsernames)) {
-                return $username;
-            }
-
-            if ($username = $this->makeUniqueByIncrement($baseUsername.'0')) {
-                return $username;
-            }
+            return $this->makeUniqueByCount($baseUsername, $similarUsernames)
+                    ?? $this->makeUniqueByMax($similarUsernames)
+                    ?? $this->makeUniqueByIncrement($baseUsername.'0')
+                    ?? $text;
         }
 
         return $text;
